@@ -1,9 +1,16 @@
 // ============================================
-// MOBILEWISE AI WIDGET - FINAL WORKING VERSION
+// MOBILEWISE AI WIDGET - POINTS TO YOUR VOICE CHAT
 // ============================================
 
 (function() {
     console.log('🚀 MobileWise AI Widget loading...');
+    
+    // ======== CONFIGURATION ========
+    const config = {
+        voiceChatUrl: 'https://mobilewise.netlify.app/voice-chat-fusion-instant',
+        videoUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4',
+        overlayImageUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png'
+    };
     
     // ======== ADD STYLES ========
     const style = document.createElement('style');
@@ -150,6 +157,52 @@
             border-radius: 15px;
             z-index: 2;
         }
+        
+        /* OVERLAY SYSTEM */
+        #mobilewiseOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 9998;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        
+        #mobilewiseVoiceInterface {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 95vw;
+            max-width: 900px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        }
+        
+        #mobilewiseCloseBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #002fff;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10000;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     `;
     document.head.appendChild(style);
     
@@ -158,11 +211,11 @@
         <div id="mobilewiseAIWidget">
             <div class="ai-video-container">
                 <video autoplay muted playsinline id="avatarVideo">
-                    <source src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4" type="video/mp4">
+                    <source src="${config.videoUrl}" type="video/mp4">
                 </video>
             </div>
             
-            <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png" 
+            <img src="${config.overlayImageUrl}" 
                  class="ai-overlay-image" 
                  alt="MobileWise AI Assistant">
             
@@ -178,6 +231,14 @@
                     Just Browsing 👉
                 </button>
             </div>
+        </div>
+        
+        <!-- OVERLAY SYSTEM -->
+        <div id="mobilewiseOverlay"></div>
+        
+        <div id="mobilewiseVoiceInterface">
+            <button id="mobilewiseCloseBtn">×</button>
+            <iframe id="voiceChatIframe" src="" allow="microphone; camera" style="width:100%; height:100%; border:none; border-radius:20px;"></iframe>
         </div>
     `;
     
@@ -223,7 +284,7 @@
             typeText(aiMessage, "Hi! I'm Botimia your Personal AI Assistant. How can I help you?");
         }, 500);
         
-        // ======== GET AI ASSISTANCE - NEW TAB APPROACH ========
+        // ======== GET AI ASSISTANCE ========
         getAssistanceBtn.addEventListener('click', async function() {
             console.log('🎤 Opening AI Voice Assistant...');
             
@@ -232,7 +293,7 @@
             this.disabled = true;
             
             try {
-                // 1. Get microphone permission (user interaction for audio)
+                // 1. Get microphone permission
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     audio: {
                         echoCancellation: true,
@@ -244,52 +305,74 @@
                 stream.getTracks().forEach(track => track.stop());
                 console.log('✅ Microphone permission granted');
                 
-                // 2. Generate voice chat URL (EXACT same as demo)
+                // 2. Generate voice chat URL - POINTS TO YOUR FILE
                 const timestamp = Date.now();
-                const voiceChatUrl = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}`;
+                const voiceChatUrl = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}`;
                 
                 // 3. Update button
                 this.innerHTML = '✅ Opening voice chat...';
                 
-                // 4. Hide widget
+                // 4. Hide widget and show overlay
                 aiWidget.classList.remove('show');
                 
-                // 5. Open in NEW TAB (NOT iframe) - THIS FIXES AUDIO
-                await new Promise(resolve => setTimeout(resolve, 500));
-                window.open(voiceChatUrl, '_blank');
+                // 5. Show overlay with iframe
+                document.getElementById('mobilewiseOverlay').style.display = 'block';
+                document.getElementById('mobilewiseVoiceInterface').style.display = 'block';
                 
-                // 6. Reset button after delay
+                // 6. Load YOUR voice chat file
+                document.getElementById('voiceChatIframe').src = voiceChatUrl;
+                
+                // 7. Reset button
                 setTimeout(() => {
                     this.innerHTML = originalText;
                     this.disabled = false;
-                    aiWidget.classList.add('show');
-                }, 3000);
+                }, 1000);
                 
             } catch (error) {
                 console.error('❌ Microphone permission denied:', error);
                 
-                // Still open without mic permission
+                // Still try without mic
                 this.innerHTML = '⚠️ Opening without mic...';
                 
-                const voiceChatUrl = 'https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&mobilewiseMode=true';
+                const voiceChatUrl = `${config.voiceChatUrl}?autoStartVoice=true&mobilewiseMode=true`;
                 
                 aiWidget.classList.remove('show');
-                
-                setTimeout(() => {
-                    window.open(voiceChatUrl, '_blank');
-                }, 500);
+                document.getElementById('mobilewiseOverlay').style.display = 'block';
+                document.getElementById('mobilewiseVoiceInterface').style.display = 'block';
+                document.getElementById('voiceChatIframe').src = voiceChatUrl;
                 
                 setTimeout(() => {
                     this.innerHTML = originalText;
                     this.disabled = false;
-                    aiWidget.classList.add('show');
-                }, 3000);
+                }, 2000);
             }
         });
         
         // Just Browsing
         justBrowsingBtn.addEventListener('click', function() {
             aiWidget.classList.remove('show');
+        });
+        
+        // Close overlay
+        document.getElementById('mobilewiseCloseBtn').addEventListener('click', closeOverlay);
+        document.getElementById('mobilewiseOverlay').addEventListener('click', closeOverlay);
+        
+        function closeOverlay() {
+            document.getElementById('mobilewiseOverlay').style.display = 'none';
+            document.getElementById('mobilewiseVoiceInterface').style.display = 'none';
+            document.getElementById('voiceChatIframe').src = '';
+            
+            // Show widget again
+            setTimeout(() => {
+                aiWidget.classList.add('show');
+            }, 1000);
+        }
+        
+        // Escape key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('mobilewiseOverlay').style.display === 'block') {
+                closeOverlay();
+            }
         });
         
     }, 2000);
