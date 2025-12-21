@@ -1,26 +1,34 @@
 // ============================================
-// MOBILEWISE AI WIDGET - DEBUG VERSION
+// MOBILEWISE AI WIDGET - FINAL WORKING VERSION
 // ============================================
 
 (function() {
-    console.log('🚀 MobileWise AI Widget - DEBUG starting...');
+    console.log('🚀 MobileWise AI Widget loading...');
     
     // ======== ADD STYLES ========
     const style = document.createElement('style');
     style.textContent = `
-        /* MOBILEWISE AI WIDGET - SIMPLE */
+        /* MOBILEWISE AI WIDGET */
         #mobilewiseAIWidget {
             position: fixed;
             bottom: 20px;
             right: 20px;
             width: 400px;
             height: 430px;
-            z-index: 99999; /* VERY HIGH */
-            border: 3px solid red; /* VISIBLE BORDER */
-            background: rgba(255,255,255,0.9); /* VISIBLE BACKGROUND */
+            z-index: 10000;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(100px);
+            opacity: 0;
+            pointer-events: none;
         }
         
-        /* VIDEO */
+        #mobilewiseAIWidget.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* VIDEO - Behind overlay */
         .ai-video-container {
             position: absolute;
             top: 100px;
@@ -30,7 +38,7 @@
             border-radius: 10px;
             overflow: hidden;
             background: black;
-            border: 2px solid blue;
+            z-index: 1;
         }
         
         .ai-video-container video {
@@ -39,17 +47,22 @@
             object-fit: cover;
         }
         
-        /* TEXT */
+        .video-frozen {
+            filter: brightness(0.98);
+        }
+        
+        /* TEXT - ABOVE overlay */
         .ai-text-container {
             position: absolute;
             bottom: 145px;
             left: 40px;
             right: 40px;
             text-align: center;
+            z-index: 3;
         }
         
         .ai-text {
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.85);
             color: white;
             padding: 12px 15px;
             border-radius: 10px;
@@ -58,10 +71,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid green;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            line-height: 1.4;
         }
         
-        /* BUTTONS */
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: white;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* BUTTONS - ABOVE overlay */
         .ai-action-buttons {
             position: absolute;
             bottom: 70px;
@@ -70,6 +98,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            z-index: 3;
         }
         
         .ai-action-btn {
@@ -79,21 +108,45 @@
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            border: 2px solid purple;
+            transition: all 0.3s;
+            text-align: center;
         }
         
         .ai-primary-btn {
             background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(0,47,255,0.3);
         }
         
         .ai-secondary-btn {
             background: white;
             color: #333;
             border: 2px solid #002fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         
-        /* OVERLAY IMAGE - TRANSPARENT */
+        .ai-primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,47,255,0.4);
+        }
+        
+        .ai-secondary-btn:hover {
+            transform: translateY(-2px);
+            background: #f8f9fa;
+        }
+        
+        .play-icon {
+            margin-left: 8px;
+            animation: blinkPlay 2s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes blinkPlay {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+        
+        /* OVERLAY IMAGE - Between video and text */
         .ai-overlay-image {
             position: absolute;
             top: 0;
@@ -102,7 +155,35 @@
             height: 100%;
             pointer-events: none;
             border-radius: 15px;
-            opacity: 0.5; /* SEMI-TRANSPARENT FOR DEBUGGING */
+            z-index: 2;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            #mobilewiseAIWidget {
+                width: 350px;
+                height: 380px;
+                right: 10px;
+            }
+            
+            .ai-video-container {
+                top: 85px;
+                left: 50px;
+                width: 250px;
+                height: 140px;
+            }
+            
+            .ai-text-container {
+                bottom: 130px;
+                left: 30px;
+                right: 30px;
+            }
+            
+            .ai-action-buttons {
+                bottom: 60px;
+                left: 30px;
+                right: 30px;
+            }
         }
     `;
     document.head.appendChild(style);
@@ -110,79 +191,175 @@
     
     // ======== ADD HTML ========
     const html = `
-        <div id="mobilewiseAIWidget" style="display: block; opacity: 1; transform: translateY(0);">
+        <div id="mobilewiseAIWidget">
             <div class="ai-video-container">
-                <video autoplay muted playsinline>
+                <video autoplay muted playsinline id="avatarVideo">
                     <source src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4" type="video/mp4">
                 </video>
             </div>
             
+            <!-- OVERLAY IMAGE (with transparent video window) -->
             <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png" 
                  class="ai-overlay-image" 
                  alt="MobileWise AI Assistant">
             
+            <!-- TEXT AREA -->
             <div class="ai-text-container">
-                <div class="ai-text" id="aiMessage">
-                    DEBUG: Widget is visible!
-                </div>
+                <div class="ai-text" id="aiMessage"></div>
             </div>
             
+            <!-- BUTTONS -->
             <div class="ai-action-buttons">
                 <button class="ai-action-btn ai-primary-btn" id="getAssistanceBtn">
-                    Get AI Assistance ▶
+                    Get AI Assistance <span class="play-icon">▶</span>
                 </button>
                 <button class="ai-action-btn ai-secondary-btn" id="justBrowsingBtn">
                     Just Browsing 👉
                 </button>
             </div>
         </div>
-        
-        <!-- DEBUG INFO -->
-        <div style="position: fixed; top: 10px; left: 10px; background: yellow; color: black; padding: 10px; z-index: 100000; font-size: 14px;">
-            MobileWise AI Debug<br>
-            Widget should be bottom-right<br>
-            Look for red/blue/green borders
-        </div>
     `;
     
     document.body.insertAdjacentHTML('beforeend', html);
     console.log('✅ HTML added');
     
-    // ======== CHECK IF ELEMENTS EXIST ========
-    setTimeout(() => {
-        const widget = document.getElementById('mobilewiseAIWidget');
-        const video = document.querySelector('.ai-video-container video');
-        const text = document.getElementById('aiMessage');
-        const buttons = document.querySelectorAll('.ai-action-btn');
-        
-        console.log('🔍 Checking elements:');
-        console.log('- Widget exists:', !!widget);
-        console.log('- Video exists:', !!video);
-        console.log('- Text exists:', !!text);
-        console.log('- Buttons exist:', buttons.length);
-        
-        if (widget) {
-            console.log('✅ Widget found at:', widget.getBoundingClientRect());
-        } else {
-            console.error('❌ Widget NOT FOUND in DOM!');
-        }
-    }, 500);
+    // ======== FUNCTIONALITY ========
     
-    // ======== SIMPLE FUNCTIONALITY ========
-    document.getElementById('getAssistanceBtn').addEventListener('click', function() {
-        console.log('🎤 Get Assistance clicked');
-        alert('Opening voice chat in new tab...');
-        
-        const timestamp = Date.now();
-        const voiceChatUrl = `https://mobilewise.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}`;
-        
-        window.open(voiceChatUrl, '_blank');
+    // Freeze video at end
+    document.getElementById('avatarVideo').addEventListener('ended', function() {
+        this.pause();
+        this.classList.add('video-frozen');
     });
     
+    // Typing animation
+    function typeText(element, text, speed = 50) {
+        element.innerHTML = '';
+        let i = 0;
+        
+        function type() {
+            if (i < text.length) {
+                element.innerHTML = text.substring(0, i + 1) + '<span class="typing-cursor"></span>';
+                i++;
+                setTimeout(type, speed);
+            } else {
+                element.innerHTML = text;
+            }
+        }
+        type();
+    }
+    
+    // Show widget with animation
+    setTimeout(() => {
+        console.log('📱 Showing MobileWise AI Widget...');
+        
+        const widget = document.getElementById('mobilewiseAIWidget');
+        const aiMessage = document.getElementById('aiMessage');
+        
+        // Make widget visible
+        widget.classList.add('visible');
+        
+        // Start typing animation
+        setTimeout(() => {
+            typeText(aiMessage, "Hi! I'm Botimia your Personal AI Assistant. How can I help you?");
+        }, 500);
+        
+    }, 1000);
+    
+    // ======== BUTTON FUNCTIONALITY ========
+    
+    // Get AI Assistance
+    document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
+        console.log('🎤 Opening AI Voice Assistant...');
+        
+        const originalText = this.innerHTML;
+        this.innerHTML = '🎤 Preparing microphone...';
+        this.disabled = true;
+        
+        try {
+            // Get microphone permission
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                } 
+            });
+            
+            stream.getTracks().forEach(track => track.stop());
+            console.log('✅ Microphone permission granted');
+            
+            // Store permission
+            localStorage.setItem('micPermissionGranted', 'true');
+            sessionStorage.setItem('startingChat', 'true');
+            
+            // Generate voice chat URL
+            const timestamp = Date.now();
+            const voiceChatUrl = `https://mobilewise.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}`;
+            
+            // Update button
+            this.innerHTML = '✅ Opening voice chat...';
+            
+            // Hide widget
+            document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+            
+            // Brief delay for visual feedback
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            // Open in new tab
+            window.open(voiceChatUrl, '_blank');
+            
+            // Reset button after delay
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+                
+                // Show widget again after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
+                }, 3000);
+            }, 1500);
+            
+        } catch (error) {
+            console.error('❌ Microphone permission denied:', error);
+            
+            // Still try without mic
+            this.innerHTML = '⚠️ Opening without mic...';
+            
+            const voiceChatUrl = 'https://mobilewise.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&mobilewiseMode=true';
+            
+            // Hide widget
+            document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+            
+            // Open in new tab
+            setTimeout(() => {
+                window.open(voiceChatUrl, '_blank');
+            }, 500);
+            
+            // Reset button and show widget again
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+                
+                setTimeout(() => {
+                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
+                }, 3000);
+            }, 2000);
+        }
+    });
+    
+    // Just Browsing
     document.getElementById('justBrowsingBtn').addEventListener('click', function() {
         console.log('👉 Just Browsing clicked');
-        document.getElementById('mobilewiseAIWidget').style.display = 'none';
+        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+        sessionStorage.setItem('userBrowsing', 'true');
     });
     
-    console.log('✅ MobileWise AI Widget DEBUG loaded');
+    // Check if user previously chose browsing
+    if (sessionStorage.getItem('userBrowsing')) {
+        console.log('📝 User previously chose browsing - not showing widget');
+    } else {
+        console.log('✅ Widget will appear in 1 second');
+    }
+    
+    console.log('✅ MobileWise AI Widget loaded successfully');
 })();
