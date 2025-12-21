@@ -1,5 +1,5 @@
 // ============================================
-// MOBILEWISE AI WIDGET - FINAL WORKING VERSION
+// MOBILEWISE AI WIDGET - EXACT DEMO URL VERSION
 // ============================================
 
 (function() {
@@ -130,11 +130,6 @@
             box-shadow: 0 6px 20px rgba(0,47,255,0.4);
         }
         
-        .ai-secondary-btn:hover {
-            transform: translateY(-2px);
-            background: #f8f9fa;
-        }
-        
         .play-icon {
             margin-left: 8px;
             animation: blinkPlay 2s infinite;
@@ -146,7 +141,7 @@
             51%, 100% { opacity: 0.3; }
         }
         
-        /* OVERLAY IMAGE - Between video and text */
+        /* OVERLAY IMAGE */
         .ai-overlay-image {
             position: absolute;
             top: 0;
@@ -157,37 +152,8 @@
             border-radius: 15px;
             z-index: 2;
         }
-        
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            #mobilewiseAIWidget {
-                width: 350px;
-                height: 380px;
-                right: 10px;
-            }
-            
-            .ai-video-container {
-                top: 85px;
-                left: 50px;
-                width: 250px;
-                height: 140px;
-            }
-            
-            .ai-text-container {
-                bottom: 130px;
-                left: 30px;
-                right: 30px;
-            }
-            
-            .ai-action-buttons {
-                bottom: 60px;
-                left: 30px;
-                right: 30px;
-            }
-        }
     `;
     document.head.appendChild(style);
-    console.log('✅ Styles added');
     
     // ======== ADD HTML ========
     const html = `
@@ -198,17 +164,14 @@
                 </video>
             </div>
             
-            <!-- OVERLAY IMAGE (with transparent video window) -->
             <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png" 
                  class="ai-overlay-image" 
                  alt="MobileWise AI Assistant">
             
-            <!-- TEXT AREA -->
             <div class="ai-text-container">
                 <div class="ai-text" id="aiMessage"></div>
             </div>
             
-            <!-- BUTTONS -->
             <div class="ai-action-buttons">
                 <button class="ai-action-btn ai-primary-btn" id="getAssistanceBtn">
                     Get AI Assistance <span class="play-icon">▶</span>
@@ -221,7 +184,6 @@
     `;
     
     document.body.insertAdjacentHTML('beforeend', html);
-    console.log('✅ HTML added');
     
     // ======== FUNCTIONALITY ========
     
@@ -265,18 +227,16 @@
         
     }, 1000);
     
-    // ======== BUTTON FUNCTIONALITY ========
-    
-    // Get AI Assistance
+    // ======== GET AI ASSISTANCE - EXACT DEMO VERSION ========
     document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
-        console.log('🎤 Opening AI Voice Assistant...');
+        console.log('🎤 Opening AI Voice Assistant (EXACT DEMO VERSION)...');
         
         const originalText = this.innerHTML;
         this.innerHTML = '🎤 Preparing microphone...';
         this.disabled = true;
         
         try {
-            // Get microphone permission
+            // EXACT SAME as demo: Get microphone permission
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: {
                     echoCancellation: true,
@@ -285,30 +245,33 @@
                 } 
             });
             
+            // Permission granted - stop the stream immediately
             stream.getTracks().forEach(track => track.stop());
-            console.log('✅ Microphone permission granted');
             
-            // Store permission
+            // Store that permission was granted
             localStorage.setItem('micPermissionGranted', 'true');
-            sessionStorage.setItem('startingChat', 'true');
             
-            // Generate voice chat URL
+            // Generate unique timestamp
             const timestamp = Date.now();
-            const voiceChatUrl = `https://mobilewise.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}`;
             
-            // Update button
+            // ⭐⭐⭐ CRITICAL FIX: USE EXACT SAME URL AS DEMO ⭐⭐⭐
+            const url = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}`;
+            
+            console.log('Opening URL:', url);
+            
+            // Update button to show success
             this.innerHTML = '✅ Opening voice chat...';
             
             // Hide widget
             document.getElementById('mobilewiseAIWidget').classList.remove('visible');
             
-            // Brief delay for visual feedback
+            // Brief delay for user feedback (EXACT SAME as demo)
             await new Promise(resolve => setTimeout(resolve, 800));
             
-            // Open in new tab
-            window.open(voiceChatUrl, '_blank');
+            // Open voice chat in new tab (EXACT SAME as demo)
+            window.open(url, '_blank');
             
-            // Reset button after delay
+            // Reset button after delay (EXACT SAME as demo)
             setTimeout(() => {
                 this.innerHTML = originalText;
                 this.disabled = false;
@@ -320,22 +283,21 @@
             }, 1500);
             
         } catch (error) {
-            console.error('❌ Microphone permission denied:', error);
+            console.error("Microphone permission denied:", error);
             
-            // Still try without mic
-            this.innerHTML = '⚠️ Opening without mic...';
+            // Update button to show error
+            this.innerHTML = '⚠️ Mic access needed';
             
-            const voiceChatUrl = 'https://mobilewise.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&mobilewiseMode=true';
+            // Still open voice chat but it will know mic wasn't granted
+            const url = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true`;
             
             // Hide widget
             document.getElementById('mobilewiseAIWidget').classList.remove('visible');
             
             // Open in new tab
-            setTimeout(() => {
-                window.open(voiceChatUrl, '_blank');
-            }, 500);
+            window.open(url, '_blank');
             
-            // Reset button and show widget again
+            // Reset button after 3 seconds
             setTimeout(() => {
                 this.innerHTML = originalText;
                 this.disabled = false;
@@ -343,7 +305,7 @@
                 setTimeout(() => {
                     document.getElementById('mobilewiseAIWidget').classList.add('visible');
                 }, 3000);
-            }, 2000);
+            }, 3000);
         }
     });
     
@@ -354,12 +316,5 @@
         sessionStorage.setItem('userBrowsing', 'true');
     });
     
-    // Check if user previously chose browsing
-    if (sessionStorage.getItem('userBrowsing')) {
-        console.log('📝 User previously chose browsing - not showing widget');
-    } else {
-        console.log('✅ Widget will appear in 1 second');
-    }
-    
-    console.log('✅ MobileWise AI Widget loaded successfully');
+    console.log('✅ MobileWise AI Widget loaded');
 })();
