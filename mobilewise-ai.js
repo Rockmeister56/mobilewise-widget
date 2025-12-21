@@ -1,237 +1,432 @@
 // ============================================
-// MOBILEWISE AI WIDGET
-// Version: 1.0
-// Load with: <script src="https://mobilewise.netlify.app/mobilewise-ai.js"></script>
+// MOBILEWISE AI WIDGET v1.0 - COMPLETE
 // ============================================
 
 (function() {
-    'use strict';
+    console.log('🚀 MobileWise AI starting...');
     
-    console.log('🚀 MobileWise AI loading...');
-    
-    // ======== ADD CSS ========
+    // ======== ADD STYLES ========
     const style = document.createElement('style');
     style.textContent = `
-        #mwAIWidget {
-            position: fixed !important;
-            bottom: 20px !important;
-            right: 20px !important;
-            width: 400px !important;
-            height: 430px !important;
-            z-index: 10000 !important;
-            transition: bottom 0.8s ease-out !important;
+        /* MOBILEWISE AI WIDGET */
+        #mobilewiseAIWidget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            height: 430px;
+            z-index: 10000;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(100px);
+            opacity: 0;
+        }
+        
+        #mobilewiseAIWidget.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .ai-video-container {
+            position: absolute;
+            top: 100px;
+            left: 60px;
+            width: 280px;
+            height: 160px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: black;
+        }
+        
+        .ai-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-frozen {
+            filter: brightness(0.98);
+        }
+        
+        .ai-text-container {
+            position: absolute;
+            bottom: 145px;
+            left: 40px;
+            right: 40px;
+            text-align: center;
+        }
+        
+        .ai-text {
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            line-height: 1.4;
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: white;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .ai-action-buttons {
+            position: absolute;
+            bottom: 70px;
+            left: 40px;
+            right: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .ai-action-btn {
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .ai-primary-btn {
+            background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,47,255,0.3);
+        }
+        
+        .ai-secondary-btn {
+            background: white;
+            color: #333;
+            border: 2px solid #002fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .ai-primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,47,255,0.4);
+        }
+        
+        .ai-secondary-btn:hover {
+            transform: translateY(-2px);
+            background: #f8f9fa;
+        }
+        
+        .play-icon {
+            margin-left: 8px;
+            animation: blinkPlay 2s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes blinkPlay {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+        
+        .ai-overlay-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 15px;
+        }
+        
+        /* Overlay System */
+        #mobilewiseOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9998;
             display: none;
+            backdrop-filter: blur(5px);
         }
         
-        #mwAIWidget .mw-video {
-            position: absolute !important;
-            top: 100px !important;
-            left: 60px !important;
-            width: 280px !important;
-            height: 160px !important;
-            border-radius: 10px !important;
-            overflow: hidden !important;
-            background: black !important;
+        #mobilewiseVoiceInterface {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            max-width: 900px;
+            height: 80vh;
+            background: white;
+            border-radius: 20px;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
         }
         
-        #mwAIWidget .mw-video video {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
+        #mobilewiseCloseBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #002fff;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10000;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        #mwAIWidget .mw-text {
-            position: absolute !important;
-            bottom: 145px !important;
-            left: 40px !important;
-            right: 40px !important;
-            background: rgba(0,0,0,0.9) !important;
-            color: white !important;
-            padding: 12px 15px !important;
-            border-radius: 10px !important;
-            text-align: center !important;
-            font-size: 14px !important;
-            min-height: 60px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-        
-        #mwAIWidget .mw-buttons {
-            position: absolute !important;
-            bottom: 70px !important;
-            left: 40px !important;
-            right: 40px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 8px !important;
-        }
-        
-        #mwAIWidget .mw-btn {
-            padding: 13px !important;
-            border: none !important;
-            border-radius: 10px !important;
-            font-size: 15px !important;
-            font-weight: bold !important;
-            cursor: pointer !important;
-            transition: all 0.3s !important;
-        }
-        
-        #mwAIWidget .mw-btn-primary {
-            background: linear-gradient(135deg, #002fff, #060a1c) !important;
-            color: white !important;
-        }
-        
-        #mwAIWidget .mw-btn-secondary {
-            background: white !important;
-            color: #333 !important;
-            border: 2px solid #002fff !important;
-        }
-        
-        #mwAIWidget .mw-overlay {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            pointer-events: none !important;
-            border-radius: 15px !important;
-        }
-        
-        /* Mobile responsive */
+        /* Mobile */
         @media (max-width: 768px) {
-            #mwAIWidget {
-                width: 350px !important;
-                height: 380px !important;
-                right: 10px !important;
+            #mobilewiseAIWidget {
+                width: 350px;
+                height: 380px;
+                right: 10px;
             }
-        }
-        
-        /* Overlay system */
-        #mwOverlay {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            background: rgba(0,0,0,0.9) !important;
-            z-index: 9998 !important;
-            display: none !important;
-        }
-        
-        #mwChatWindow {
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            width: 90vw !important;
-            max-width: 900px !important;
-            height: 80vh !important;
-            background: white !important;
-            border-radius: 20px !important;
-            z-index: 9999 !important;
-            display: none !important;
-        }
-        
-        #mwCloseBtn {
-            position: absolute !important;
-            top: 20px !important;
-            right: 20px !important;
-            background: #002fff !important;
-            color: white !important;
-            border: none !important;
-            width: 40px !important;
-            height: 40px !important;
-            border-radius: 50% !important;
-            cursor: pointer !important;
-            font-size: 24px !important;
-            z-index: 10000 !important;
+            
+            .ai-video-container {
+                top: 85px;
+                left: 50px;
+                width: 250px;
+                height: 140px;
+            }
+            
+            .ai-text-container {
+                bottom: 130px;
+                left: 30px;
+                right: 30px;
+            }
+            
+            .ai-action-buttons {
+                bottom: 60px;
+                left: 30px;
+                right: 30px;
+            }
         }
     `;
     document.head.appendChild(style);
     
     // ======== ADD HTML ========
     const html = `
-        <div id="mwAIWidget">
-            <div class="mw-video">
-                <video autoplay muted playsinline loop>
+        <!-- AI Widget -->
+        <div id="mobilewiseAIWidget">
+            <!-- Video Container -->
+            <div class="ai-video-container">
+                <video autoplay muted playsinline id="avatarVideo">
                     <source src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4" type="video/mp4">
                 </video>
             </div>
             
-            <div class="mw-text" id="mwMessage">
-                Hi! I'm your MobileWise AI Assistant
+            <!-- Animated Text Area -->
+            <div class="ai-text-container">
+                <div class="ai-text" id="aiMessage"></div>
             </div>
             
-            <div class="mw-buttons">
-                <button class="mw-btn mw-btn-primary" id="mwGetHelp">
-                    Get AI Assistance ▶
+            <!-- Action Buttons -->
+            <div class="ai-action-buttons">
+                <button class="ai-action-btn ai-primary-btn" id="getAssistanceBtn">
+                    Get AI Assistance <span class="play-icon">▶</span>
                 </button>
-                <button class="mw-btn mw-btn-secondary" id="mwJustBrowse">
+                <button class="ai-action-btn ai-secondary-btn" id="justBrowsingBtn">
                     Just Browsing 👉
                 </button>
             </div>
             
+            <!-- Overlay Image -->
             <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png" 
-                 class="mw-overlay" 
-                 alt="MobileWise AI">
+                 class="ai-overlay-image" 
+                 alt="MobileWise AI Assistant">
         </div>
         
-        <div id="mwOverlay"></div>
+        <!-- Overlay System -->
+        <div id="mobilewiseOverlay"></div>
         
-        <div id="mwChatWindow">
-            <button id="mwCloseBtn">×</button>
-            <iframe id="mwChatIframe" src="" allow="microphone" style="width:100%; height:100%; border:none; border-radius:20px;"></iframe>
+        <div id="mobilewiseVoiceInterface">
+            <button id="mobilewiseCloseBtn">×</button>
+            <iframe id="voiceChatIframe" src="" allow="microphone; camera" style="width:100%; height:100%; border:none; border-radius:20px;"></iframe>
         </div>
     `;
     
     document.body.insertAdjacentHTML('beforeend', html);
     
-    // ======== ADD FUNCTIONALITY ========
-    setTimeout(() => {
-        console.log('📱 Showing MobileWise AI');
+    // ======== FUNCTIONALITY ========
+    
+    // Freeze video at end instead of looping
+    document.getElementById('avatarVideo').addEventListener('ended', function() {
+        this.pause();
+        this.classList.add('video-frozen');
+    });
+
+    // Animated typing text
+    function typeText(element, text, speed = 50) {
+        element.innerHTML = '';
+        let i = 0;
         
-        // Show widget
-        document.getElementById('mwAIWidget').style.display = 'block';
+        function type() {
+            if (i < text.length) {
+                element.innerHTML = text.substring(0, i + 1) + '<span class="typing-cursor"></span>';
+                i++;
+                setTimeout(type, speed);
+            } else {
+                element.innerHTML = text;
+            }
+        }
+        type();
+    }
+
+    // Session management
+    document.addEventListener('DOMContentLoaded', function() {
+        const aiWidget = document.getElementById('mobilewiseAIWidget');
+        const getAssistanceBtn = document.getElementById('getAssistanceBtn');
+        const justBrowsingBtn = document.getElementById('justBrowsingBtn');
+        const aiMessage = document.getElementById('aiMessage');
         
-        // Get AI Assistance
-        document.getElementById('mwGetHelp').addEventListener('click', function() {
-            console.log('Opening AI chat...');
-            
-            // Hide widget
-            document.getElementById('mwAIWidget').style.display = 'none';
-            
-            // Show overlay and chat
-            document.getElementById('mwOverlay').style.display = 'block';
-            document.getElementById('mwChatWindow').style.display = 'block';
-            
-            // Load voice chat
-            const url = 'https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?mobilewiseMode=true';
-            document.getElementById('mwChatIframe').src = url;
-        });
+        // Check if user just finished a chat session
+        const justFinishedChat = sessionStorage.getItem('justFinishedChat');
+        const comingFromChat = document.referrer.includes('smartaivoicebot/voice-chat');
         
-        // Just Browsing
-        document.getElementById('mwJustBrowse').addEventListener('click', function() {
-            document.getElementById('mwAIWidget').style.display = 'none';
-        });
-        
-        // Close chat
-        document.getElementById('mwCloseBtn').addEventListener('click', closeChat);
-        document.getElementById('mwOverlay').addEventListener('click', closeChat);
-        
-        function closeChat() {
-            document.getElementById('mwOverlay').style.display = 'none';
-            document.getElementById('mwChatWindow').style.display = 'none';
-            document.getElementById('mwChatIframe').src = '';
-            
-            // Show widget again
-            setTimeout(() => {
-                document.getElementById('mwAIWidget').style.display = 'block';
+        // Show widget UNLESS they just finished a chat session
+        if (!justFinishedChat && !comingFromChat) {
+            setTimeout(function() {
+                aiWidget.classList.add('show');
+                
+                // Start typing animation after widget appears
+                setTimeout(() => {
+                    typeText(aiMessage, "Hi! I'm Botimia your Personal AI Assistant. How can I help you?");
+                }, 500);
+                
             }, 1000);
+        } else {
+            // Clear the flag so widget shows on next visit
+            sessionStorage.removeItem('justFinishedChat');
         }
         
-        console.log('✅ MobileWise AI ready!');
+        // Get AI Assistance Button
+        getAssistanceBtn.addEventListener('click', async function() {
+            // Set flag that they're starting a chat session
+            sessionStorage.setItem('startingChat', 'true');
+            
+            // Update button to show we're preparing
+            const originalText = getAssistanceBtn.innerHTML;
+            getAssistanceBtn.innerHTML = '🎤 Preparing microphone...';
+            getAssistanceBtn.disabled = true;
+            
+            try {
+                // Get microphone permission
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    } 
+                });
+                
+                // Permission granted - stop the stream immediately
+                stream.getTracks().forEach(track => track.stop());
+                
+                // Store that permission was granted
+                localStorage.setItem('micPermissionGranted', 'true');
+                
+                // Generate unique timestamp to prevent caching
+                const timestamp = Date.now();
+                
+                // Generic URL with permission bridge parameters
+                const url = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}`;
+                
+                // Update button to show success
+                getAssistanceBtn.innerHTML = '✅ Opening voice chat...';
+                
+                // Hide widget
+                aiWidget.classList.remove('show');
+                
+                // Brief delay for user feedback
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                // Show overlay and open voice chat
+                document.getElementById('mobilewiseOverlay').style.display = 'block';
+                document.getElementById('mobilewiseVoiceInterface').style.display = 'block';
+                document.getElementById('voiceChatIframe').src = url;
+                
+                // Reset button after delay
+                setTimeout(() => {
+                    getAssistanceBtn.innerHTML = originalText;
+                    getAssistanceBtn.disabled = false;
+                }, 1500);
+                
+            } catch (error) {
+                console.error("Microphone permission denied:", error);
+                
+                // Update button to show error
+                getAssistanceBtn.innerHTML = '⚠️ Opening without mic...';
+                
+                // Still open voice chat but it will know mic wasn't granted
+                const url = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&mobilewiseMode=true`;
+                
+                // Hide widget
+                aiWidget.classList.remove('show');
+                
+                // Show overlay
+                document.getElementById('mobilewiseOverlay').style.display = 'block';
+                document.getElementById('mobilewiseVoiceInterface').style.display = 'block';
+                document.getElementById('voiceChatIframe').src = url;
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    getAssistanceBtn.innerHTML = originalText;
+                    getAssistanceBtn.disabled = false;
+                }, 3000);
+            }
+        });
         
-    }, 2000); // Wait 2 seconds
+        // Just Browsing Button
+        justBrowsingBtn.addEventListener('click', function() {
+            aiWidget.classList.remove('show');
+            // Optional: Set a flag to not show again for this session
+            sessionStorage.setItem('userBrowsing', 'true');
+        });
+        
+        // Close overlay functionality
+        document.getElementById('mobilewiseCloseBtn').addEventListener('click', closeOverlay);
+        document.getElementById('mobilewiseOverlay').addEventListener('click', closeOverlay);
+        
+        function closeOverlay() {
+            // Set flag that user just finished a chat
+            sessionStorage.setItem('justFinishedChat', 'true');
+            
+            // Hide overlay
+            document.getElementById('mobilewiseOverlay').style.display = 'none';
+            document.getElementById('mobilewiseVoiceInterface').style.display = 'none';
+            document.getElementById('voiceChatIframe').src = '';
+            
+            // Don't show widget again immediately after chat
+            // User would need to refresh or come back later
+        }
+        
+        // Escape key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('mobilewiseOverlay').style.display === 'block') {
+                closeOverlay();
+            }
+        });
+    });
     
+    console.log('✅ MobileWise AI script loaded');
 })();
