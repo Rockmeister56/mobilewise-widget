@@ -1,5 +1,5 @@
 // ============================================
-// MOBILEWISE AI WIDGET v1.0 - COMPLETE
+// MOBILEWISE AI WIDGET v1.0 - Z-INDEX FIXED
 // ============================================
 
 (function() {
@@ -26,6 +26,7 @@
             opacity: 1;
         }
         
+        /* VIDEO - Behind overlay */
         .ai-video-container {
             position: absolute;
             top: 100px;
@@ -35,6 +36,7 @@
             border-radius: 10px;
             overflow: hidden;
             background: black;
+            z-index: 1; /* BEHIND overlay */
         }
         
         .ai-video-container video {
@@ -47,12 +49,14 @@
             filter: brightness(0.98);
         }
         
+        /* TEXT - ABOVE overlay */
         .ai-text-container {
             position: absolute;
             bottom: 145px;
             left: 40px;
             right: 40px;
             text-align: center;
+            z-index: 3; /* ABOVE overlay */
         }
         
         .ai-text {
@@ -83,6 +87,7 @@
             51%, 100% { opacity: 0; }
         }
         
+        /* BUTTONS - ABOVE overlay */
         .ai-action-buttons {
             position: absolute;
             bottom: 70px;
@@ -91,6 +96,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            z-index: 3; /* ABOVE overlay */
         }
         
         .ai-action-btn {
@@ -138,14 +144,16 @@
             51%, 100% { opacity: 0.3; }
         }
         
+        /* OVERLAY IMAGE - Between video and text/buttons */
         .ai-overlay-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
+            pointer-events: none; /* Allows clicks to pass through */
             border-radius: 15px;
+            z-index: 2; /* BETWEEN video (1) and text/buttons (3) */
         }
         
         /* Overlay System */
@@ -228,19 +236,24 @@
     const html = `
         <!-- AI Widget -->
         <div id="mobilewiseAIWidget">
-            <!-- Video Container -->
+            <!-- Video Container - z-index: 1 -->
             <div class="ai-video-container">
                 <video autoplay muted playsinline id="avatarVideo">
                     <source src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4" type="video/mp4">
                 </video>
             </div>
             
-            <!-- Animated Text Area -->
+            <!-- Overlay Image - z-index: 2 (BETWEEN video and text) -->
+            <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png" 
+                 class="ai-overlay-image" 
+                 alt="MobileWise AI Assistant">
+            
+            <!-- Animated Text Area - z-index: 3 (ABOVE overlay) -->
             <div class="ai-text-container">
                 <div class="ai-text" id="aiMessage"></div>
             </div>
             
-            <!-- Action Buttons -->
+            <!-- Action Buttons - z-index: 3 (ABOVE overlay) -->
             <div class="ai-action-buttons">
                 <button class="ai-action-btn ai-primary-btn" id="getAssistanceBtn">
                     Get AI Assistance <span class="play-icon">▶</span>
@@ -249,11 +262,6 @@
                     Just Browsing 👉
                 </button>
             </div>
-            
-            <!-- Overlay Image -->
-            <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png" 
-                 class="ai-overlay-image" 
-                 alt="MobileWise AI Assistant">
         </div>
         
         <!-- Overlay System -->
