@@ -2,18 +2,11 @@
 // MOBILEWISE WIDGET - COMPLETE FIXED VERSION
 // ============================================
 
-// Add this right before window.open():
-console.log('🔗 FINAL URL BEING SENT:');
-console.log('  autoStartVoice:', true);
-console.log('  micPermissionGranted:', true);
-console.log('  gestureInitiated:', true);
-console.log('  Full URL:', url);
-
 (function() {
     console.log('🚀 MobileWise Widget loading (FIXED VERSION)...');
     
     // CONFIG - POINT TO YOUR VOICE CHAT
-    const config = {
+   const config = {
         voiceChatUrl: 'https://mobilewise.netlify.app/voice-chat-fusion-instant',
         videoUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4',
         overlayImageUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png'
@@ -267,7 +260,7 @@ console.log('  Full URL:', url);
         
     }, 1000);
     
-    // ======== GET AI ASSISTANCE WITH PERMISSION BRIDGE ========
+     // ======== GET AI ASSISTANCE WITH PERMISSION BRIDGE ========
     document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
         console.log('🎤 Opening AI Voice Assistant...');
         console.log('🔗 Voice chat file:', config.voiceChatUrl);
@@ -296,6 +289,14 @@ console.log('  Full URL:', url);
             // 3. Generate URL WITH ALL PERMISSION BRIDGE PARAMETERS
             const timestamp = Date.now();
             const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget&permissionBridge=true&popupMode=true&userGesture=widget-click`;
+            
+            // ✅ ADDED: DEBUG LOGS HERE
+            console.log('🔗 FINAL URL BEING SENT:');
+            console.log('  autoStartVoice:', true);
+            console.log('  micPermissionGranted:', true);
+            console.log('  gestureInitiated:', true);
+            console.log('  Full URL:', url);
+            console.log('  Timestamp:', timestamp);
             
             console.log('🔗 Opening with permission bridge:', url);
             
@@ -346,6 +347,13 @@ console.log('  Full URL:', url);
             this.innerHTML = '⚠️ Opening without mic...';
             
             const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget&popupMode=true`;
+            
+            // ✅ ADDED: DEBUG FOR ERROR CASE
+            console.log('🔗 ERROR CASE URL (no mic permission):');
+            console.log('  autoStartVoice:', true);
+            console.log('  micPermissionGranted:', false);
+            console.log('  gestureInitiated:', true);
+            console.log('  Full URL:', url);
             
             document.getElementById('mobilewiseAIWidget').classList.remove('visible');
             
