@@ -2,6 +2,13 @@
 // MOBILEWISE WIDGET - COMPLETE FIXED VERSION
 // ============================================
 
+// Add this right before window.open():
+console.log('🔗 FINAL URL BEING SENT:');
+console.log('  autoStartVoice:', true);
+console.log('  micPermissionGranted:', true);
+console.log('  gestureInitiated:', true);
+console.log('  Full URL:', url);
+
 (function() {
     console.log('🚀 MobileWise Widget loading (FIXED VERSION)...');
     
