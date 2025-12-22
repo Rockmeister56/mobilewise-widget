@@ -1,25 +1,25 @@
 // ============================================
-// HYBRID WIDGET - MOBILE NEW TAB + DESKTOP OVERLAY
-// COMPLETE WITH 800x600 ASPECT RATIO
+// MOBILEWISE AI WIDGET - COMPLETE VERSION
+// Mobile: Full Screen | Desktop: Popup Window
 // ============================================
 
 (function() {
-    console.log('🚀 Hybrid Widget Loading (Mobile-NewTab / Desktop-Overlay)...');
+    console.log('🚀 MobileWise Widget Loading...');
     
-    // CONFIG
+    // CONFIG - POINT TO YOUR VOICE CHAT
     const config = {
         voiceChatUrl: 'https://mobilewise.netlify.app/voice-chat-fusion-instant',
         videoUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4',
         overlayImageUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png'
     };
     
-    // Detect device type
+    // Detect device
     const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|Windows Phone/i.test(navigator.userAgent);
     const isDesktop = !isMobile && window.innerWidth > 768;
     
     console.log(`📱 Device: ${isMobile ? 'Mobile' : isDesktop ? 'Desktop' : 'Tablet'}`);
     
-    // ======== COMPLETE MOBILE-FRIENDLY CSS ========
+    // ======== INJECT CSS ========
     const style = document.createElement('style');
     style.textContent = `
         /* MOBILEWISE AI WIDGET - BOTTOM RIGHT */
@@ -175,73 +175,7 @@
             z-index: 2;
         }
         
-        /* ===== DESKTOP OVERLAY - 800x600 ASPECT RATIO ===== */
-        #voiceChatOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 20000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
-        #voiceChatOverlay.active {
-            display: flex;
-            opacity: 1;
-        }
-        
-        #voiceChatContainer {
-            width: 90%;
-            max-width: 800px;
-            height: 0; /* For aspect ratio */
-            padding-bottom: 75%; /* 600/800 = 0.75 (4:3 aspect ratio) */
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            position: relative;
-        }
-        
-        #voiceChatIframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-        
-        .close-voice-chat {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-        }
-        
-        .close-voice-chat:hover {
-            background: rgba(255,0,0,0.8);
-        }
-        
-        /* ===== MOBILE OVERLAY - FULL SCREEN ===== */
+        /* Mobile adjustments */
         @media (max-width: 768px) {
             #mobilewiseAIWidget {
                 width: 300px;
@@ -254,39 +188,6 @@
                 width: 220px;
                 left: 40px;
                 top: 110px;
-            }
-            
-            /* Mobile overlay adjustments */
-            #voiceChatContainer {
-                width: 100%;
-                height: 100vh; /* Full screen on mobile */
-                padding-bottom: 0; /* Override aspect ratio */
-                max-width: none;
-                border-radius: 0;
-            }
-            
-            #voiceChatIframe {
-                height: 100vh;
-            }
-            
-            .close-voice-chat {
-                top: 10px;
-                right: 10px;
-                background: rgba(255,0,0,0.8);
-            }
-        }
-        
-        /* Small mobile adjustments */
-        @media (max-width: 480px) {
-            #mobilewiseAIWidget {
-                width: 280px;
-                right: 5px;
-                bottom: 5px;
-            }
-            
-            .ai-video-container {
-                width: 200px;
-                left: 40px;
             }
         }
     `;
@@ -318,35 +219,19 @@
             </button>
         </div>
     </div>
-    
-    <!-- DESKTOP OVERLAY (injected only on desktop) -->
-    ${isDesktop ? `
-    <div id="voiceChatOverlay">
-        <div id="voiceChatContainer">
-            <button class="close-voice-chat" id="closeVoiceChat">×</button>
-            <iframe id="voiceChatIframe" 
-                    allow="microphone; camera"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
-            </iframe>
-        </div>
-    </div>
-    ` : ''}
     `;
     
     document.body.insertAdjacentHTML('beforeend', widgetHTML);
     
-    // ======== MAIN FUNCTIONALITY ========
+    // ======== FUNCTIONALITY ========
     
-    // Show widget
-    setTimeout(() => {
-        document.getElementById('mobilewiseAIWidget').classList.add('visible');
-        setTimeout(() => {
-            const aiMessage = document.getElementById('aiMessage');
-            typeText(aiMessage, "Hi! I'm Botimia your Personal AI Assistant. How can I help you?");
-        }, 500);
-    }, 1000);
+    // Freeze video at end
+    document.getElementById('avatarVideo').addEventListener('ended', function() {
+        this.pause();
+        this.classList.add('video-frozen');
+    });
     
-    // Typing animation function
+    // Typing animation
     function typeText(element, text, speed = 50) {
         element.innerHTML = '';
         let i = 0;
@@ -363,15 +248,26 @@
         type();
     }
     
-    // Freeze video at end
-    document.getElementById('avatarVideo').addEventListener('ended', function() {
-        this.pause();
-        this.classList.add('video-frozen');
-    });
+    // Show widget with animation
+    setTimeout(() => {
+        console.log('📱 Showing MobileWise AI Widget...');
+        
+        const widget = document.getElementById('mobilewiseAIWidget');
+        const aiMessage = document.getElementById('aiMessage');
+        
+        // Make widget visible
+        widget.classList.add('visible');
+        
+        // Start typing animation
+        setTimeout(() => {
+            typeText(aiMessage, "Hi! I'm Botimia your Personal AI Assistant. How can I help you?");
+        }, 500);
+        
+    }, 1000);
     
-    // ======== HYBRID CLICK HANDLER ========
+    // ======== GET AI ASSISTANCE - MOBILE FULL SCREEN + DESKTOP POPUP ========
     document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
-        console.log(`🎤 Hybrid click: ${isMobile ? 'Mobile (new tab)' : 'Desktop (overlay)'}`);
+        console.log(`🎤 Opening voice chat: ${isMobile ? 'Mobile (full screen)' : 'Desktop (popup)'}`);
         
         const originalText = this.innerHTML;
         this.innerHTML = '🎤 Getting microphone...';
@@ -380,89 +276,85 @@
         try {
             // 1. Get microphone permission
             const stream = await navigator.mediaDevices.getUserMedia({ 
-                audio: { 
-                    echoCancellation: true, 
+                audio: {
+                    echoCancellation: true,
                     noiseSuppression: true,
                     autoGainControl: true
                 } 
             });
-            stream.getTracks().forEach(track => track.stop());
             
+            stream.getTracks().forEach(track => track.stop());
+            console.log('✅ Microphone permission granted');
+            
+            // 2. Store permission
             localStorage.setItem('micPermissionGranted', 'true');
             sessionStorage.setItem('startingChat', 'true');
             
-            // 2. Generate URL
+            // 3. Generate URL
             const timestamp = Date.now();
-            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=hybrid-widget&device=${isMobile ? 'mobile' : 'desktop'}`;
+            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
             
             console.log('🔗 Generated URL:', url);
             
+            // 4. Hide widget
             this.innerHTML = '✅ Opening...';
             document.getElementById('mobilewiseAIWidget').classList.remove('visible');
             
-            // 3. HYBRID DECISION
+            // 5. Wait a moment
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // 6. OPEN BASED ON DEVICE
             if (isMobile) {
-                // MOBILE: Open in new tab
-                console.log('📱 Mobile → Opening new tab');
-                const newTab = window.open(url, '_blank', 'noopener,noreferrer');
-                
-                if (!newTab) {
-                    // Fallback for popup blockers
-                    window.location.href = url;
-                }
-                
-                // Show widget again after 4 seconds
-                setTimeout(() => {
-                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
-                }, 4000);
+                // MOBILE: Full screen navigation
+                console.log('📱 Opening full screen for mobile');
+                window.location.href = url;
                 
             } else {
-                // DESKTOP: Open in overlay
-                console.log('🖥️ Desktop → Opening overlay');
-                await new Promise(resolve => setTimeout(resolve, 500));
+                // DESKTOP: Popup window (800×600)
+                console.log('🖥️ Opening popup window for desktop');
                 
-                const iframe = document.getElementById('voiceChatIframe');
-                const overlay = document.getElementById('voiceChatOverlay');
+                const popupWidth = 800;
+                const popupHeight = 600;
+                const left = (window.screen.width - popupWidth) / 2;
+                const top = (window.screen.height - popupHeight) / 2;
                 
-                if (iframe && overlay) {
-                    setTimeout(() => {
-                        iframe.src = url;
-                        overlay.classList.add('active');
-                        
-                        // Setup close handlers
-                        setupOverlayClose();
-                    }, 300);
-                } else {
-                    // Fallback to new tab
+                const popup = window.open(url, 'VoiceChatPopup', 
+                    `width=${popupWidth},height=${popupHeight},left=${left},top=${top},resizable=yes,scrollbars=yes,toolbar=no,menubar=no`
+                );
+                
+                if (!popup) {
+                    console.error('❌ Popup blocked! Opening in new tab instead.');
                     window.open(url, '_blank');
+                } else {
+                    console.log('✅ Popup opened successfully');
                 }
+                
+                // Show widget again after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
+                }, 3000);
             }
             
-            // Reset button
+            // 7. Reset button
             setTimeout(() => {
                 this.innerHTML = originalText;
                 this.disabled = false;
             }, 1500);
             
         } catch (error) {
-            console.error('❌ Microphone error:', error);
+            console.error('❌ Microphone permission denied:', error);
             
             // Open without mic permission
-            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=hybrid-widget`;
+            this.innerHTML = '⚠️ Opening without mic...';
+            
+            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget`;
             
             if (isMobile) {
-                window.open(url, '_blank');
-            } else if (document.getElementById('voiceChatOverlay')) {
-                const iframe = document.getElementById('voiceChatIframe');
-                const overlay = document.getElementById('voiceChatOverlay');
-                iframe.src = url;
-                overlay.classList.add('active');
-                setupOverlayClose();
+                window.location.href = url;
             } else {
                 window.open(url, '_blank');
             }
             
-            // Show widget again after 3 seconds
             setTimeout(() => {
                 this.innerHTML = originalText;
                 this.disabled = false;
@@ -471,49 +363,12 @@
         }
     });
     
-    // Overlay close setup function
-    function setupOverlayClose() {
-        const overlay = document.getElementById('voiceChatOverlay');
-        const iframe = document.getElementById('voiceChatIframe');
-        
-        // Close button
-        document.getElementById('closeVoiceChat').onclick = function() {
-            overlay.classList.remove('active');
-            setTimeout(() => {
-                iframe.src = '';
-                document.getElementById('mobilewiseAIWidget').classList.add('visible');
-            }, 300);
-        };
-        
-        // Click outside to close
-        overlay.onclick = function(e) {
-            if (e.target === overlay) {
-                overlay.classList.remove('active');
-                setTimeout(() => {
-                    iframe.src = '';
-                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
-                }, 300);
-            }
-        };
-        
-        // ESC key to close
-        document.addEventListener('keydown', function escHandler(e) {
-            if (e.key === 'Escape' && overlay.classList.contains('active')) {
-                overlay.classList.remove('active');
-                setTimeout(() => {
-                    iframe.src = '';
-                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
-                }, 300);
-                document.removeEventListener('keydown', escHandler);
-            }
-        });
-    }
-    
     // Just Browsing button
     document.getElementById('justBrowsingBtn').addEventListener('click', function() {
+        console.log('👉 Just Browsing clicked');
         document.getElementById('mobilewiseAIWidget').classList.remove('visible');
         sessionStorage.setItem('userBrowsing', 'true');
     });
     
-    console.log('✅ Complete Hybrid Widget Loaded');
+    console.log('✅ MobileWise AI Widget Loaded');
 })();
