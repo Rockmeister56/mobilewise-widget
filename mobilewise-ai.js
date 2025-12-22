@@ -1,182 +1,24 @@
 // ============================================
-// MOBILEWISE AI WIDGET - FINAL CORRECT VERSION
+// MOBILEWISE WIDGET - BASED ON WORKING NCI-DEMO3
 // ============================================
 
 (function() {
-    console.log('🚀 MobileWise AI Widget loading...');
+    console.log('🚀 MobileWise Widget loading (based on nci-demo3)...');
     
-    // ======== CONFIGURATION ========
+    // CONFIG - POINT TO YOUR VOICE CHAT
     const config = {
-        // ⭐⭐⭐ POINTS TO YOUR VOICE CHAT FILE ⭐⭐⭐
         voiceChatUrl: 'https://mobilewise.netlify.app/voice-chat-fusion-instant',
         videoUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4',
         overlayImageUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png'
     };
     
-    console.log('🔗 Using voice chat URL:', config.voiceChatUrl);
-    
-    // ======== ADD STYLES ========
-    const style = document.createElement('style');
-    style.textContent = `
-        /* MOBILEWISE AI WIDGET */
-        #mobilewiseAIWidget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 400px;
-            height: 430px;
-            z-index: 10000;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: translateY(100px);
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        #mobilewiseAIWidget.visible {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        /* VIDEO - Behind overlay */
-        .ai-video-container {
-            position: absolute;
-            top: 100px;
-            left: 60px;
-            width: 280px;
-            height: 160px;
-            border-radius: 10px;
-            overflow: hidden;
-            background: black;
-            z-index: 1;
-        }
-        
-        .ai-video-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .video-frozen {
-            filter: brightness(0.98);
-        }
-        
-        /* TEXT - ABOVE overlay */
-        .ai-text-container {
-            position: absolute;
-            bottom: 145px;
-            left: 40px;
-            right: 40px;
-            text-align: center;
-            z-index: 3;
-        }
-        
-        .ai-text {
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 10px;
-            font-size: 14px;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            line-height: 1.4;
-        }
-        
-        .typing-cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1em;
-            background: white;
-            margin-left: 2px;
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-        
-        /* BUTTONS - ABOVE overlay */
-        .ai-action-buttons {
-            position: absolute;
-            bottom: 70px;
-            left: 40px;
-            right: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            z-index: 3;
-        }
-        
-        .ai-action-btn {
-            padding: 13px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        
-        .ai-primary-btn {
-            background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,47,255,0.3);
-        }
-        
-        .ai-secondary-btn {
-            background: white;
-            color: #333;
-            border: 2px solid #002fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        
-        .ai-primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,47,255,0.4);
-        }
-        
-        .play-icon {
-            margin-left: 8px;
-            animation: blinkPlay 2s infinite;
-            display: inline-block;
-        }
-        
-        @keyframes blinkPlay {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.3; }
-        }
-        
-        /* OVERLAY IMAGE */
-        .ai-overlay-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            border-radius: 15px;
-            z-index: 2;
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // ======== ADD HTML ========
-    const html = `
-        <div id="mobilewiseAIWidget">
-            <div class="ai-video-container">
-                <video autoplay muted playsinline id="avatarVideo">
-                    <source src="${config.videoUrl}" type="video/mp4">
-                </video>
-            </div>
-            
-            <img src="${config.overlayImageUrl}" 
-                 class="ai-overlay-image" 
-                 alt="MobileWise AI Assistant">
+    // ======== INJECT EXACT NCI-DEMO3 HTML ========
+    const widgetHTML = `
+    <div class="ai-button-container" id="mobilewiseAIWidget">
+        <div class="ai-button-wrapper">
+            <video class="ai-video" autoplay muted playsinline id="avatarVideo">
+                <source src="${config.videoUrl}" type="video/mp4">
+            </video>
             
             <div class="ai-text-container">
                 <div class="ai-text" id="aiMessage"></div>
@@ -190,12 +32,180 @@
                     Just Browsing 👉
                 </button>
             </div>
+            
+            <img src="${config.overlayImageUrl}" class="ai-button-overlay" alt="AI Voice Assistant">
         </div>
+    </div>
     `;
     
-    document.body.insertAdjacentHTML('beforeend', html);
+    // ======== INJECT EXACT NCI-DEMO3 CSS ========
+    const style = document.createElement('style');
+    style.textContent = `
+        /* EXACT COPY FROM NCI-DEMO3.HTML */
+        .ai-button-container {
+            position: fixed;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding-bottom: 50px;
+        }
+        
+        .ai-button-wrapper {
+            background: transparent;
+            border: none;
+            width: 85vw;
+            max-width: 430px;
+            height: auto;
+            position: relative;
+            display: block;
+        }
+        
+        .ai-button-overlay {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 8px 35px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 2;
+            pointer-events: none;
+            transform: scale(1.15);
+            transform-origin: center center;
+        }
+        
+        .ai-video {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            position: relative;
+            z-index: 1;
+            top: 215px;
+            transform: scale(0.90);
+            transform-origin: center center;
+            pointer-events: auto;
+        }
+        
+        .video-frozen {
+            filter: brightness(0.98);
+        }
+        
+        .ai-text-container {
+            position: absolute;
+            bottom: 84px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 3;
+            padding: 0 20px;
+        }
+        
+        .ai-text {
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: #333;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .ai-action-btn {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            height: 40px;
+        }
+        
+        .ai-action-buttons {
+            position: absolute;
+            bottom: 3px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 0 20px;
+            z-index: 3;
+        }
+        
+        .ai-primary-btn {
+            background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
+            color: rgb(255, 255, 255);
+        }
+        
+        .ai-secondary-btn {
+            background: rgb(89, 0, 255);
+            color: #ffffff;
+            border: 2px solid #000000;
+        }
+        
+        .ai-primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .ai-secondary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+        
+        .play-icon {
+            margin-left: 8px;
+            animation: blinkPlay 2s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes blinkPlay {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+        
+        /* DESKTOP-ONLY adjustments */
+        @media (min-width: 768px) and (hover: hover) {
+            .ai-video {
+                top: 320px !important;
+                transform: scale(0.85) !important;
+            }
+            
+            .ai-text-container {
+                bottom: 125px !important;
+            }
+        }
+    `;
     
-    // ======== FUNCTIONALITY ========
+    // Inject everything
+    document.head.appendChild(style);
+    document.body.insertAdjacentHTML('beforeend', widgetHTML);
+    
+    // ======== COPY EXACT NCI-DEMO3 JAVASCRIPT ========
     
     // Freeze video at end
     document.getElementById('avatarVideo').addEventListener('ended', function() {
@@ -203,7 +213,7 @@
         this.classList.add('video-frozen');
     });
     
-    // Typing animation
+    // Typing animation (same as nci-demo3)
     function typeText(element, text, speed = 50) {
         element.innerHTML = '';
         let i = 0;
@@ -220,34 +230,27 @@
         type();
     }
     
-    // Show widget with animation
+    // Show widget (same as nci-demo3)
     setTimeout(() => {
-        console.log('📱 Showing MobileWise AI Widget...');
-        
         const widget = document.getElementById('mobilewiseAIWidget');
         const aiMessage = document.getElementById('aiMessage');
         
-        // Make widget visible
-        widget.classList.add('visible');
+        widget.style.transform = 'translateY(0)';
         
-        // Start typing animation
         setTimeout(() => {
             typeText(aiMessage, "Hi! I'm Botimia your Personal AI Assistant. How can I help you?");
         }, 500);
-        
     }, 1000);
     
-    // ======== GET AI ASSISTANCE ========
+    // Get AI Assistance Button (SAME LOGIC, BUT WITH YOUR URL)
     document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
-        console.log('🎤 Opening AI Voice Assistant...');
-        console.log('📁 Voice chat file:', config.voiceChatUrl);
+        sessionStorage.setItem('startingChat', 'true');
         
         const originalText = this.innerHTML;
         this.innerHTML = '🎤 Preparing microphone...';
         this.disabled = true;
         
         try {
-            // 1. Get microphone permission
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: {
                     echoCancellation: true,
@@ -257,82 +260,45 @@
             });
             
             stream.getTracks().forEach(track => track.stop());
-            console.log('✅ Microphone permission granted');
-            
-            // 2. Store permission
             localStorage.setItem('micPermissionGranted', 'true');
-            sessionStorage.setItem('startingChat', 'true');
             
-            // 3. Generate URL WITH ALL PARAMETERS
             const timestamp = Date.now();
-            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=widget&permissionBridge=true`;
             
-            console.log('🔗 Opening URL:', url);
+            // ✅ THIS IS THE KEY: Use YOUR voice chat URL
+            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
             
-            // 4. Update button
             this.innerHTML = '✅ Opening voice chat...';
             
-            // 5. Hide widget
-            document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-            
-            // 6. Wait for visual feedback
             await new Promise(resolve => setTimeout(resolve, 800));
             
-            // 7. OPEN IN NEW TAB
-            const newTab = window.open(url, '_blank');
+            window.open(url, '_blank');
             
-            if (!newTab) {
-                console.error('❌ Popup blocked! Please allow popups for this site.');
-                alert('Please allow popups to open the voice chat.');
-                
-                // Fallback: Show URL for manual copy
-                prompt('Popup blocked. Please copy this URL and open manually:', url);
-            }
-            
-            // 8. Reset button
             setTimeout(() => {
                 this.innerHTML = originalText;
                 this.disabled = false;
-                
-                // Show widget again after 3 seconds
-                setTimeout(() => {
-                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
-                }, 3000);
             }, 1500);
             
         } catch (error) {
-            console.error('❌ Microphone permission denied:', error);
+            console.error("Microphone permission denied:", error);
             
-            // Still try without mic
-            this.innerHTML = '⚠️ Opening without mic...';
+            this.innerHTML = '⚠️ Mic access needed';
             
-            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=widget`;
-            
-            document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-            
-            const newTab = window.open(url, '_blank');
-            
-            if (!newTab) {
-                prompt('Popup blocked. Please copy this URL:', url);
-            }
+            // ✅ Use YOUR voice chat URL for error case too
+            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget`;
+            window.open(url, '_blank');
             
             setTimeout(() => {
                 this.innerHTML = originalText;
                 this.disabled = false;
-                
-                setTimeout(() => {
-                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
-                }, 3000);
             }, 3000);
         }
     });
     
-    // Just Browsing
+    // Just Browsing Button
     document.getElementById('justBrowsingBtn').addEventListener('click', function() {
-        console.log('👉 Just Browsing clicked');
-        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+        document.getElementById('mobilewiseAIWidget').style.transform = 'translateY(100%)';
         sessionStorage.setItem('userBrowsing', 'true');
     });
     
-    console.log('✅ MobileWise AI Widget loaded');
+    console.log('✅ MobileWise Widget loaded (exact nci-demo3 clone)');
 })();
