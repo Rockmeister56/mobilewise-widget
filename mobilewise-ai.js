@@ -1,9 +1,19 @@
 // ============================================
-// MOBILEWISE AI WIDGET - EXACT DEMO URL VERSION
+// MOBILEWISE AI WIDGET - FINAL CORRECT VERSION
 // ============================================
 
 (function() {
     console.log('🚀 MobileWise AI Widget loading...');
+    
+    // ======== CONFIGURATION ========
+    const config = {
+        // ⭐⭐⭐ POINTS TO YOUR VOICE CHAT FILE ⭐⭐⭐
+        voiceChatUrl: 'https://mobilewise.netlify.app/voice-chat-fusion-instant',
+        videoUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4',
+        overlayImageUrl: 'https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png'
+    };
+    
+    console.log('🔗 Using voice chat URL:', config.voiceChatUrl);
     
     // ======== ADD STYLES ========
     const style = document.createElement('style');
@@ -160,11 +170,11 @@
         <div id="mobilewiseAIWidget">
             <div class="ai-video-container">
                 <video autoplay muted playsinline id="avatarVideo">
-                    <source src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4" type="video/mp4">
+                    <source src="${config.videoUrl}" type="video/mp4">
                 </video>
             </div>
             
-            <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png" 
+            <img src="${config.overlayImageUrl}" 
                  class="ai-overlay-image" 
                  alt="MobileWise AI Assistant">
             
@@ -227,16 +237,17 @@
         
     }, 1000);
     
-    // ======== GET AI ASSISTANCE - EXACT DEMO VERSION ========
+    // ======== GET AI ASSISTANCE ========
     document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
-        console.log('🎤 Opening AI Voice Assistant (EXACT DEMO VERSION)...');
+        console.log('🎤 Opening AI Voice Assistant...');
+        console.log('📁 Voice chat file:', config.voiceChatUrl);
         
         const originalText = this.innerHTML;
         this.innerHTML = '🎤 Preparing microphone...';
         this.disabled = true;
         
         try {
-            // EXACT SAME as demo: Get microphone permission
+            // 1. Get microphone permission
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: {
                     echoCancellation: true,
@@ -245,33 +256,40 @@
                 } 
             });
             
-            // Permission granted - stop the stream immediately
             stream.getTracks().forEach(track => track.stop());
+            console.log('✅ Microphone permission granted');
             
-            // Store that permission was granted
+            // 2. Store permission
             localStorage.setItem('micPermissionGranted', 'true');
+            sessionStorage.setItem('startingChat', 'true');
             
-            // Generate unique timestamp
+            // 3. Generate URL WITH ALL PARAMETERS
             const timestamp = Date.now();
+            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=widget&permissionBridge=true`;
             
-            // ⭐⭐⭐ CRITICAL FIX: USE EXACT SAME URL AS DEMO ⭐⭐⭐
-            const url = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}`;
+            console.log('🔗 Opening URL:', url);
             
-            console.log('Opening URL:', url);
-            
-            // Update button to show success
+            // 4. Update button
             this.innerHTML = '✅ Opening voice chat...';
             
-            // Hide widget
+            // 5. Hide widget
             document.getElementById('mobilewiseAIWidget').classList.remove('visible');
             
-            // Brief delay for user feedback (EXACT SAME as demo)
+            // 6. Wait for visual feedback
             await new Promise(resolve => setTimeout(resolve, 800));
             
-            // Open voice chat in new tab (EXACT SAME as demo)
-            window.open(url, '_blank');
+            // 7. OPEN IN NEW TAB
+            const newTab = window.open(url, '_blank');
             
-            // Reset button after delay (EXACT SAME as demo)
+            if (!newTab) {
+                console.error('❌ Popup blocked! Please allow popups for this site.');
+                alert('Please allow popups to open the voice chat.');
+                
+                // Fallback: Show URL for manual copy
+                prompt('Popup blocked. Please copy this URL and open manually:', url);
+            }
+            
+            // 8. Reset button
             setTimeout(() => {
                 this.innerHTML = originalText;
                 this.disabled = false;
@@ -283,21 +301,21 @@
             }, 1500);
             
         } catch (error) {
-            console.error("Microphone permission denied:", error);
+            console.error('❌ Microphone permission denied:', error);
             
-            // Update button to show error
-            this.innerHTML = '⚠️ Mic access needed';
+            // Still try without mic
+            this.innerHTML = '⚠️ Opening without mic...';
             
-            // Still open voice chat but it will know mic wasn't granted
-            const url = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true`;
+            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=widget`;
             
-            // Hide widget
             document.getElementById('mobilewiseAIWidget').classList.remove('visible');
             
-            // Open in new tab
-            window.open(url, '_blank');
+            const newTab = window.open(url, '_blank');
             
-            // Reset button after 3 seconds
+            if (!newTab) {
+                prompt('Popup blocked. Please copy this URL:', url);
+            }
+            
             setTimeout(() => {
                 this.innerHTML = originalText;
                 this.disabled = false;
