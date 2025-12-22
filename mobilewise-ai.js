@@ -1,9 +1,9 @@
 // ============================================
-// MOBILEWISE AI WIDGET - COMPLETE FIXED VERSION
+// MOBILEWISE AI WIDGET - VISIBLE FIXED VERSION
 // ============================================
 
 (function() {
-    console.log('🚀 MobileWise Widget loading (COMPLETE FIXED VERSION)...');
+    console.log('🚀 MobileWise Widget loading (VISIBLE FIXED VERSION)...');
     
     // CONFIG - POINT TO YOUR VOICE CHAT
     const config = {
@@ -17,7 +17,7 @@
     // ======== INJECT CSS ========
     const style = document.createElement('style');
     style.textContent = `
-        /* MOBILEWISE AI WIDGET - BOTTOM RIGHT POSITION */
+        /* MOBILEWISE AI WIDGET - BOTTOM RIGHT POSITION - VISIBLE VERSION */
         #mobilewiseAIWidget {
             position: fixed;
             bottom: 20px;
@@ -25,18 +25,15 @@
             width: 320px;
             height: 430px;
             z-index: 10000;
-            transform: translateY(100px);
-            opacity: 0;
-            pointer-events: none;
+            /* CHANGED: Remove the hide transforms and make immediately visible */
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
                         opacity 0.8s ease;
         }
         
-        #mobilewiseAIWidget.visible {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
+        /* CHANGED: Remove .visible class override - widget is always visible */
         
         /* Video container */
         .ai-video-container {
@@ -271,7 +268,7 @@
     const widgetHTML = `
     <div id="mobilewiseAIWidget">
         <div class="ai-video-container">
-            <video autoplay muted playsinline id="avatarVideo">
+            <video autoplay muted playsinline loop id="avatarVideo">
                 <source src="${config.videoUrl}" type="video/mp4">
             </video>
         </div>
@@ -281,7 +278,7 @@
              alt="MobileWise AI Assistant">
         
         <div class="ai-text-container">
-            <div class="ai-text" id="aiMessage"></div>
+            <div class="ai-text" id="aiMessage">Hi! I'm Botimia your Personal AI Assistant. How can I help you?</div>
         </div>
         
         <div class="ai-action-buttons">
@@ -310,10 +307,10 @@
     
     // ======== FUNCTIONALITY ========
     
-    // Freeze video at end
+    // Freeze video at end (but now with loop, it won't freeze)
     document.getElementById('avatarVideo').addEventListener('ended', function() {
-        this.pause();
-        this.classList.add('video-frozen');
+        this.currentTime = 0;
+        this.play();
     });
     
     // Typing animation
@@ -333,22 +330,18 @@
         type();
     }
     
-    // Show widget with animation
+    // Show widget immediately (no delay, already visible)
+    console.log('📱 MobileWise AI Widget VISIBLE immediately...');
+    
+    const widget = document.getElementById('mobilewiseAIWidget');
+    const aiMessage = document.getElementById('aiMessage');
+    
+    // Start typing animation immediately
     setTimeout(() => {
-        console.log('📱 Showing MobileWise AI Widget...');
-        
-        const widget = document.getElementById('mobilewiseAIWidget');
-        const aiMessage = document.getElementById('aiMessage');
-        
-        // Make widget visible
-        widget.classList.add('visible');
-        
-        // Start typing animation
-        setTimeout(() => {
-            typeText(aiMessage, "Hi! I'm Botimia your Personal AI Assistant. How can I help you?");
-        }, 500);
-        
-    }, 1000);
+        // Clear existing text and type it
+        aiMessage.innerHTML = '';
+        typeText(aiMessage, "Hi! I'm Botimia your Personal AI Assistant. How can I help you?");
+    }, 100);
     
     // ======== GET AI ASSISTANCE - WITH BASE64 PARAMETER PASSING ========
     document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
@@ -397,8 +390,8 @@
             // 5. Update button
             this.innerHTML = '✅ Opening voice chat...';
             
-            // 6. Hide widget
-            document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+            // 6. Hide widget (optional - you can remove this if you want widget to stay)
+            // document.getElementById('mobilewiseAIWidget').style.opacity = '0.5';
             
             // 7. Set iframe source and show overlay
             setTimeout(() => {
@@ -457,9 +450,6 @@
             
             console.log('🔗 Error case URL:', url);
             
-            // Hide widget
-            document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-            
             // Show voice chat overlay
             setTimeout(() => {
                 const iframe = document.getElementById('voiceChatIframe');
@@ -505,8 +495,8 @@
         setTimeout(() => {
             iframe.src = '';
             
-            // Show widget again
-            document.getElementById('mobilewiseAIWidget').classList.add('visible');
+            // Make widget fully visible again
+            document.getElementById('mobilewiseAIWidget').style.opacity = '1';
         }, 300);
     }
     
@@ -523,9 +513,14 @@
     // Just Browsing
     document.getElementById('justBrowsingBtn').addEventListener('click', function() {
         console.log('👉 Just Browsing clicked');
-        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+        document.getElementById('mobilewiseAIWidget').style.opacity = '0.3';
         sessionStorage.setItem('userBrowsing', 'true');
+        
+        // Restore after 5 seconds
+        setTimeout(() => {
+            document.getElementById('mobilewiseAIWidget').style.opacity = '1';
+        }, 5000);
     });
     
-    console.log('✅ MobileWise AI Widget loaded (complete fixed version)');
+    console.log('✅ MobileWise AI Widget loaded (VISIBLE fixed version)');
 })();
