@@ -20,7 +20,7 @@
         /* MOBILEWISE AI WIDGET - BOTTOM RIGHT POSITION */
         #mobilewiseAIWidget {
             position: fixed;
-            bottom: 20px;
+            bottom: 5px;
             right: 20px;
             width: 320px;
             height: 430px;
@@ -43,8 +43,8 @@
             position: absolute;
             top: 120px;
             left: 40px;
-            width: 240px;
-            height: 140px;
+            width: 300px;
+            height: 360px;
             border-radius: 10px;
             overflow: hidden;
             background: black;
