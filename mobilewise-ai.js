@@ -22,7 +22,7 @@
             position: fixed;
             bottom: 5px;
             right: 20px;
-            width: 320px;
+            width: 380px;
             height: 430px;
             z-index: 10000;
             transform: translateY(100px);
@@ -43,8 +43,8 @@
             position: absolute;
             top: 120px;
             left: 40px;
-            width: 300px;
-            height: 360px;
+            width: 240px;
+            height: 140px;
             border-radius: 10px;
             overflow: hidden;
             background: black;
