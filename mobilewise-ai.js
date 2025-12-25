@@ -41,9 +41,9 @@
         /* Video container */
         .ai-video-container {
             position: absolute;
-            top: 120px;
-            left: 40px;
-            width: 240px;
+            top: 100px;
+            left: 20px;
+            width: 260px;
             height: 140px;
             border-radius: 10px;
             overflow: hidden;
