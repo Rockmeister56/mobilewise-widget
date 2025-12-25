@@ -17,233 +17,200 @@
     // ======== INJECT CSS ========
     const style = document.createElement('style');
     style.textContent = `
-       /* ======== MOBILEWISE AI WIDGET - PERFECTED VERSION ======== */
+       /* ======== MOBILEWISE AI WIDGET - PRECISE POSITIONING ======== */
 #mobilewiseAIWidget {
     position: fixed;
-    bottom: 0px;  /* Start at bottom */
+    bottom: 0px;  /* Start at absolute bottom */
     right: 20px;
-    width: 400px;  /* WIDER: 400px exactly */
-    height: 445px; /* HEIGHT: 445px exactly (400x445 ratio) */
+    width: 400px;
+    height: 445px;
     z-index: 10000;
-    transform: translateY(120px); /* Start further down */
+    transform: translateY(120px);
     opacity: 0;
     pointer-events: none;
     transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                opacity 0.8s ease,
-                bottom 0.3s ease; /* Smooth bottom adjustment */
+                opacity 0.8s ease;
 }
 
 #mobilewiseAIWidget.visible {
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
-    bottom: 40px; /* COMES DOWN 20px MORE when settled */
+    bottom: 0px !important; /* FORCE to bottom - NO GAP */
 }
 
-/* ===== VIDEO CONTAINER - PERFECTED ===== */
+/* ===== VIDEO CONTAINER - KEEP AS IS ===== */
 .ai-video-container {
     position: absolute;
-    top: 100px; /* LOWERED: Was 120px, now 100px */
-    left: 50px; /* CENTERED BETTER: Was 40px, now 50px */
-    width: 300px; /* WIDER: Was 240px, now 300px */
-    height: 175px; /* TALLER: Was 140px, now 175px (400x445 ratio) */
-    border-radius: 12px; /* Slightly larger radius */
+    top: 100px;
+    left: 50px;
+    width: 300px;
+    height: 175px;
+    border-radius: 12px;
     overflow: hidden;
     background: black;
     z-index: 1;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4); /* Better shadow */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
 }
 
-.ai-video-container video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-}
-
-/* ===== TEXT CONTAINER - ADJUSTED ===== */
+/* ===== TEXT CONTAINER - 40% SMALLER & 20px LOWER ===== */
 .ai-text-container {
     position: absolute;
-    bottom: 155px; /* LOWERED: Was 145px, now 155px */
-    left: 25px;    /* BETTER MARGINS */
-    right: 25px;
+    bottom: 175px; /* LOWERED 20px: Was 155px, now 175px */
+    left: 40px;    /* WIDER MARGINS for smaller container */
+    right: 40px;
     text-align: center;
     z-index: 3;
 }
 
 .ai-text {
-    background: rgba(0, 0, 0, 0.9); /* Darker for better contrast */
+    background: rgba(0, 0, 0, 0.9);
     color: white;
-    padding: 14px 18px; /* More padding */
-    border-radius: 12px;
-    font-size: 14.5px; /* Slightly larger */
-    min-height: 70px;   /* Taller: Was 60px */
+    padding: 10px 14px; /* SMALLER PADDING: Was 14px 18px */
+    border-radius: 10px; /* Slightly smaller radius */
+    font-size: 13.5px;   /* SMALLER TEXT: Was 14.5px */
+    min-height: 55px;    /* 40% SMALLER: Was 70px (55 is ~21% smaller, adjust as needed) */
+    max-height: 55px;    /* FIXED HEIGHT */
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-    line-height: 1.5;   /* Better line spacing */
-    backdrop-filter: blur(10px); /* Glass effect */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    line-height: 1.4;
+    backdrop-filter: blur(10px);
+    overflow: hidden; /* Prevent text overflow */
 }
 
-/* ===== BUTTONS - HEIGHT FIXED ===== */
+/* ===== BUTTONS - 20% SMALLER & 30px LOWER ===== */
 .ai-action-buttons {
     position: absolute;
-    bottom: 80px; /* LOWERED: Was 70px, now 80px */
-    left: 25px;   /* Better margins */
-    right: 25px;
+    bottom: 110px; /* LOWERED 30px: Was 80px, now 110px */
+    left: 40px;    /* Align with text container */
+    right: 40px;
     display: flex;
     flex-direction: column;
-    gap: 10px;    /* More spacing */
+    gap: 8px;      /* Tighter gap for smaller buttons */
     z-index: 3;
 }
 
 .ai-action-btn {
-    padding: 16px !important; /* TALLER: Was 13px, now 16px */
+    padding: 12px !important; /* 20% SMALLER: Was 16px, now 12px */
     border: none;
-    border-radius: 12px; /* Larger radius */
-    font-size: 16px;     /* Slightly larger text */
-    font-weight: 700;    /* Bolder */
+    border-radius: 10px;      /* Slightly smaller radius */
+    font-size: 14px;          /* SMALLER TEXT: Was 16px */
+    font-weight: 600;         /* Slightly less bold */
     cursor: pointer;
     transition: all 0.3s;
     text-align: center;
-    height: 52px;        /* FIXED HEIGHT */
+    height: 42px;             /* 20% SMALLER: Was 52px, now 42px */
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
+    width: 100%;              /* Full width of container */
 }
 
+/* Button-specific adjustments */
 .ai-primary-btn {
     background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
     color: white;
-    box-shadow: 0 6px 20px rgba(0,47,255,0.4);
-    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 12px rgba(0,47,255,0.4); /* Smaller shadow */
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .ai-secondary-btn {
     background: white;
     color: #333;
-    border: 2px solid #002fff;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border: 1px solid #002fff; /* Thinner border */
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
 .ai-primary-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0,47,255,0.5);
+    transform: translateY(-2px); /* Smaller hover lift */
+    box-shadow: 0 6px 18px rgba(0,47,255,0.5);
 }
 
 .ai-secondary-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
     background: #f8f9fa;
 }
 
-/* ===== OVERLAY IMAGE - ADJUSTED ===== */
-.ai-overlay-image {
+/* ===== FORCE BOTTOM POSITIONING - NO GAP ===== */
+body.has-mobilewise-widget {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Add this if there's still a gap */
+#mobilewiseAIWidget::after {
+    content: '';
     position: absolute;
-    top: 0;
+    bottom: -1px; /* Cover any remaining gap */
     left: 0;
     width: 100%;
-    height: 100%;
-    pointer-events: none;
-    border-radius: 20px; /* Larger radius */
-    z-index: 2;
-    filter: brightness(1.05) contrast(1.1);
+    height: 1px;
+    background: transparent;
 }
 
-/* ===== VOICE CHAT OVERLAY - IMPROVED ===== */
-#voiceChatOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.92); /* Darker */
-    z-index: 20000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s;
-    padding: 20px;
-    backdrop-filter: blur(10px); /* Blur background */
-}
-
-#voiceChatContainer {
-    width: 92%;
-    max-width: 1100px; /* Wider */
-    height: 85vh; /* Taller */
-    min-height: 600px;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* Dark theme */
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-
-/* ===== MOBILE RESPONSIVE - PERFECTED ===== */
+/* ===== MOBILE ADJUSTMENTS - PROPORTIONAL ===== */
 @media (max-width: 768px) {
     #mobilewiseAIWidget {
-        width: 350px;   /* Wider on mobile */
-        height: 420px;  /* Proportional */
+        width: 350px;
+        height: 420px;
         right: 50%;
-        transform: translateX(50%) translateY(120px); /* Center horizontally */
-        bottom: 10px;
+        transform: translateX(50%) translateY(120px);
+        bottom: 0px; /* Start at bottom on mobile */
     }
     
     #mobilewiseAIWidget.visible {
         transform: translateX(50%) translateY(0);
-        bottom: 30px; /* Comes down on mobile too */
+        bottom: 0px !important; /* FORCE to bottom */
     }
     
     .ai-video-container {
-        width: 260px;   /* Proportional */
+        width: 260px;
         height: 150px;
         left: 45px;
         top: 90px;
     }
     
     .ai-text-container {
-        bottom: 140px;
-        left: 20px;
-        right: 20px;
+        bottom: 160px; /* Adjusted proportionally */
+        left: 35px;
+        right: 35px;
+    }
+    
+    .ai-text {
+        padding: 9px 12px;
+        font-size: 12.5px;
+        min-height: 50px;
+        max-height: 50px;
     }
     
     .ai-action-buttons {
-        bottom: 70px;
-        left: 20px;
-        right: 20px;
+        bottom: 100px; /* Adjusted proportionally */
+        left: 35px;
+        right: 35px;
     }
     
     .ai-action-btn {
-        padding: 14px !important;
-        height: 48px;
-        font-size: 15px;
-    }
-    
-    #voiceChatContainer {
-        width: 100%;
-        height: 100vh;
-        max-width: none;
-        border-radius: 0;
+        padding: 10px !important;
+        height: 38px;
+        font-size: 13px;
+        border-radius: 8px;
     }
 }
 
-/* ===== SMALL MOBILE ===== */
+/* ===== SMALL MOBILE - FURTHER ADJUSTMENTS ===== */
 @media (max-width: 480px) {
     #mobilewiseAIWidget {
         width: 320px;
         height: 400px;
-        bottom: 5px;
+        bottom: 0px;
     }
     
     #mobilewiseAIWidget.visible {
-        bottom: 25px;
+        bottom: 0px !important;
     }
     
     .ai-video-container {
@@ -253,10 +220,29 @@
         top: 85px;
     }
     
+    .ai-text-container {
+        bottom: 150px;
+        left: 30px;
+        right: 30px;
+    }
+    
     .ai-text {
-        font-size: 13.5px;
-        min-height: 65px;
-        padding: 12px 15px;
+        font-size: 12px;
+        min-height: 45px;
+        max-height: 45px;
+        padding: 8px 10px;
+    }
+    
+    .ai-action-buttons {
+        bottom: 90px;
+        left: 30px;
+        right: 30px;
+    }
+    
+    .ai-action-btn {
+        padding: 8px !important;
+        height: 36px;
+        font-size: 12.5px;
     }
 }
     `;
