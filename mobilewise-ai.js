@@ -65,7 +65,7 @@
         /* Text */
         .ai-text-container {
             position: absolute;
-            bottom: 145px;
+            bottom: 120px;
             left: 20px;
             right: 20px;
             text-align: center;
