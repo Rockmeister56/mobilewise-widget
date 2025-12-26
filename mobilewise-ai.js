@@ -62,9 +62,9 @@
         /* Copy and replace your current .ai-text-container and .ai-text */
 .ai-text-container {
     position: absolute;
-    bottom: 135px;
-    left: 34px;
-    right: 34px;
+    bottom: 131px;
+    left: 36px;
+    right: 36px;
     text-align: center;
     z-index: 3;
 }
