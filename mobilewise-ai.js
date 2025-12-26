@@ -137,7 +137,7 @@
 }        
         .ai-primary-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 255, 34, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 255, 34, 1);
         }
         
         .ai-secondary-btn:hover {
