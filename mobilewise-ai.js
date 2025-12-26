@@ -73,7 +73,7 @@
         }
         
         .ai-text {
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(255, 255, 255, 0.85);
             color: white;
             padding: 12px 15px;
             border-radius: 10px;
