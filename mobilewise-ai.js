@@ -102,12 +102,12 @@
 /* Buttons */
 .ai-action-buttons {
     position: absolute;
-    bottom: 23px;          /* WAS: 3px - NOW: 20px LOWER (3 + 20 = 23) */
-    left: 30px;            /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
-    right: 30px;           /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
+    bottom: 35px;          /* WAS: 3px - NOW: 20px LOWER (3 + 20 = 23) */
+    left: 40px;            /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
+    right: 40px;           /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
     display: flex;
     flex-direction: column;
-    gap: 4px;              /* WAS: 8px - NOW: 4px gap between buttons */
+    gap: 15px;              /* WAS: 8px - NOW: 4px gap between buttons */
     z-index: 3;
 }
 
