@@ -38,16 +38,6 @@
             pointer-events: auto;
         }
         
-        /* Video container */
- .ai-video-container {
-    position: absolute;
-    top: 100px;
-    left: 20px;
-    width: 300px;
-    height: 175px;
-    border-radius: 12px;
-    overflow: hidden;
-}
 
    .ai-video {
         width: 100%;
@@ -55,7 +45,7 @@
         border-radius: 15px;
         position: relative;
         z-index: 1;
-        top: 120px; /* Adjusted for right side */
+        top: 180px; /* Adjusted for right side */
         transform: scale(0.75);
         transform-origin: center center;
     }
