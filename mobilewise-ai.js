@@ -74,7 +74,7 @@
     color: white;
     padding: 12px 20px !important;
     border-radius: 20px;
-    font-size: 14px;
+    font-size: 16px;
     min-height: 50px;
     max-height: 50px;
     display: flex;
