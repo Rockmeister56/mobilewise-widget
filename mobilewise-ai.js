@@ -42,12 +42,18 @@
  .ai-video-container {
     position: absolute;
     top: 100px;
-    left: 20px;
+    left: 50px;
     width: 300px;
     height: 175px;
     border-radius: 12px;
     overflow: hidden;
 }
+        
+        .ai-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         
         .video-frozen {
             filter: brightness(0.98);
