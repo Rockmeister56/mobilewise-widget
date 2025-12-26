@@ -127,25 +127,6 @@
             box-shadow: 0 4px 10px rgba(68, 0, 255, 1);
         }
 
-        /* IMMEDIATE FIX FOR TRAIN WRECK */
-.ai-video-container {
-    left: 40px !important;    /* Move video RIGHT a bit */
-    width: 300px !important;  /* Original good size */
-    height: 175px !important; /* Original good size */
-}
-
-.ai-text-container {
-    left: 40px !important;    /* Match video position */
-    right: 40px !important;   /* Match video position = good width */
-    bottom: 150px !important; /* Good spacing from buttons */
-}
-
-.ai-text {
-    padding: 8px 10px !important; /* Compact */
-    font-size: 12.5px !important;  /* Slightly smaller */
-    min-height: 45px !important;   /* Compact height */
-}
-
         /* Example: Smaller buttons */
 .ai-action-buttons {
     bottom: 40px; /* Move buttons DOWN 10px */
