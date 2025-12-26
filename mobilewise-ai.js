@@ -62,9 +62,9 @@
         /* Text */
         .ai-text-container {
             position: absolute;
-            bottom: 100px;
-            left: 40px;
-            right: 40px;
+            bottom: 160px;
+            left: 10px;
+            right: 10px;
             text-align: center;
             z-index: 3;
         }
