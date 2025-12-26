@@ -102,7 +102,7 @@
 /* Buttons */
 .ai-action-buttons {
     position: absolute;
-    bottom: 45px;          /* WAS: 3px - NOW: 20px LOWER (3 + 20 = 23) */
+    bottom: 15px;          /* WAS: 3px - NOW: 20px LOWER (3 + 20 = 23) */
     left: 50px;            /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
     right: 50px;           /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
     display: flex;
