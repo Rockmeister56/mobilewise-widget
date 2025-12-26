@@ -21,8 +21,8 @@
         #mobilewiseAIWidget {
             position: fixed;
             bottom: 5px;
-            right: 40px;
-            width: 400px;
+            right: 20px;
+            width: 390px;
             height: 430px;
             z-index: 10000;
             transform: translateY(100px);
@@ -42,7 +42,7 @@
         .ai-video-container {
     position: absolute;
     top: 100px; /* LOWERED: Was 120px, now 100px */
-    left: -20px; /* CENTERED BETTER: Was 40px, now 50px */
+    left: 100px; /* CENTERED BETTER: Was 40px, now 50px */
     width: 300px; /* WIDER: Was 240px, now 300px */
     height: 175px; /* TALLER: Was 140px, now 175px (400x445 ratio) */
     border-radius: 12px; /* Slightly larger radius */
