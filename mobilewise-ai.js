@@ -73,17 +73,17 @@
         }
         
         .ai-text {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(0, 0, 0, 0.85);
             color: white;
             padding: 12px 15px;
-            border-radius: 10px;
+            border-radius: 20px;
             font-size: 14px;
-            min-height: 40px;
+            min-height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            line-height: 1.8;
+            line-height: 1.4;
         }
         
         .typing-cursor {
