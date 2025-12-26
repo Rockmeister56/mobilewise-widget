@@ -219,7 +219,7 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            background: rgba(255, 255, 255, 1);
+            background: rgba(255, 0, 0, 1);
             color: white;
             border: none;
             width: 40px;
@@ -235,7 +235,7 @@
         }
         
         .close-voice-chat:hover {
-            background: rgba(255,0,0,0.8);
+            background: rgba(255, 255, 255, 1);
         }
         
         /* Mobile adjustments */
