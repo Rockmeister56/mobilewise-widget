@@ -99,54 +99,42 @@
             51%, 100% { opacity: 0; }
         }
         
-        /* Buttons */
-        .ai-action-buttons {
-            position: absolute;
-            bottom: 3px;
-            left: 10px;
-            right: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            z-index: 3;
-        }
-        
-        .ai-action-btn {
-            padding: 7px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        
-        .ai-primary-btn {
-            background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(25, 0, 255, 1);
-        }
-        
-        .ai-secondary-btn {
-            background: linear-gradient(135deg, #6f00ffff 0%, #060a1c 100%);
-            color: #ffffffff;
-            border: 2px solid #002fff;
-            box-shadow: 0 4px 10px rgba(68, 0, 255, 1);
-        }
-
-        /* Example: Smaller buttons */
+/* Buttons */
 .ai-action-buttons {
-    bottom: 30px; /* Move buttons DOWN 10px */
-    gap: 8px; /* Reduce space between buttons */
+    position: absolute;
+    bottom: 23px;          /* WAS: 3px - NOW: 20px LOWER (3 + 20 = 23) */
+    left: 30px;            /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
+    right: 30px;           /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;              /* WAS: 8px - NOW: 4px gap between buttons */
+    z-index: 3;
 }
 
 .ai-action-btn {
-    padding: 10px; /* Reduce padding (makes shorter) */
-    font-size: 14px; /* Smaller text */
-    height: 30px; /* Fixed shorter height */
+    padding: 7px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    width: 100%;           /* Ensures buttons use available width */
 }
-        
+
+.ai-primary-btn {
+    background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(25, 0, 255, 1);
+}
+
+.ai-secondary-btn {
+    background: linear-gradient(135deg, #6f00ffff 0%, #060a1c 100%);
+    color: #ffffffff;
+    border: 2px solid #002fff;
+    box-shadow: 0 4px 10px rgba(68, 0, 255, 1);
+}        
         .ai-primary-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,47,255,0.4);
