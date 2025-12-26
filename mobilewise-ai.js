@@ -22,7 +22,7 @@
             position: fixed;
             bottom: 5px;
             right: 20px;
-            width: 380px;
+            width: 400px;
             height: 430px;
             z-index: 10000;
             transform: translateY(100px);
