@@ -42,7 +42,7 @@
  .ai-video-container {
     position: absolute;
     top: 100px;
-    left: 100px;
+    left: 20px;
     width: 300px;
     height: 175px;
     border-radius: 12px;
