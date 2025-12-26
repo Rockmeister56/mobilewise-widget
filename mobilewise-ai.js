@@ -100,43 +100,52 @@
             51%, 100% { opacity: 0; }
         }
         
-       /* ===== BUTTON SIZE & POSITION CONTROL ===== */
+        /* Buttons */
+        .ai-action-buttons {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 3;
+        }
+        
+        .ai-action-btn {
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .ai-primary-btn {
+            background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,47,255,0.3);
+        }
+        
+        .ai-secondary-btn {
+            background: linear-gradient(135deg, #6f00ffff 0%, #060a1c 100%);
+            color: #333;
+            border: 2px solid #002fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-/* 1. BUTTON HEIGHT FROM BOTTOM - YOU CONTROL THIS */
+        /* Example: Smaller buttons */
 .ai-action-buttons {
-    position: absolute;
-    bottom: 30px; /* ← CHANGE THIS NUMBER: Higher = lower, Lower = higher */
-    left: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* ← CHANGE GAP BETWEEN BUTTONS */
-    z-index: 3;
+    bottom: 40px; /* Move buttons DOWN 10px */
+    gap: 6px; /* Reduce space between buttons */
 }
 
-/* 2. BUTTON HEIGHT - YOU CONTROL THIS */
 .ai-action-btn {
-    padding: 13px; /* ← CHANGE PADDING: More = taller, Less = shorter */
-    border: none;
-    border-radius: 10px;
-    font-size: 15px; /* ← CHANGE FONT SIZE: Bigger text */
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-align: center;
-    height: auto; /* ← CHANGE TO FIXED HEIGHT IF NEEDED: Example: height: 48px; */
-    min-height: 0; /* ← SET MINIMUM HEIGHT: Example: min-height: 44px; */
-}
-
-/* 3. SPECIFIC BUTTON SIZE OVERRIDES */
-.ai-primary-btn {
-    /* Add specific sizing if needed */
-    height: 48px; /* ← SET EXACT HEIGHT FOR PRIMARY BUTTON */
-}
-
-.ai-secondary-btn {
-    /* Add specific sizing if needed */
-    height: 44px; /* ← SET EXACT HEIGHT FOR SECONDARY BUTTON */
+    padding: 10px; /* Reduce padding (makes shorter) */
+    font-size: 14px; /* Smaller text */
+    height: 40px; /* Fixed shorter height */
 }
         
         .ai-primary-btn:hover {
