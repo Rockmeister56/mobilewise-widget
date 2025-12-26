@@ -260,77 +260,6 @@
                 border-radius: 0;
             }
         }
-            /* ===== GLOW EFFECTS FOR INTERFACE ===== */
-
-/* Main widget container glow */
-#mobilewiseAIWidget,
-.ai-button-container {
-    box-shadow: var(--interface-shadow) !important;
-    border: 1px solid rgba(0, 102, 255, 0.4) !important;
-    background: var(--primary-gradient) !important;
-    border-radius: 20px !important;
-    position: relative;
-}
-
-/* Add pulsing glow animation */
-@keyframes pulse-glow {
-    0%, 100% { 
-        box-shadow: 0 0 20px rgba(0, 102, 255, 0.5),
-                    0 0 40px rgba(0, 102, 255, 0.3),
-                    0 0 60px rgba(0, 102, 255, 0.1);
-    }
-    50% { 
-        box-shadow: 0 0 30px rgba(0, 102, 255, 0.7),
-                    0 0 60px rgba(0, 102, 255, 0.4),
-                    0 0 90px rgba(0, 102, 255, 0.2);
-    }
-}
-
-#mobilewiseAIWidget:hover,
-.ai-button-container:hover {
-    animation: pulse-glow 2s infinite;
-}
-
-/* Video container with glow */
-.ai-video-container {
-    box-shadow: 0 0 25px rgba(0, 102, 255, 0.6),
-                0 0 50px rgba(0, 102, 255, 0.3),
-                inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
-    border: 2px solid rgba(0, 102, 255, 0.5) !important;
-    border-radius: 15px !important;
-}
-
-/* Buttons with intense glow */
-.ai-primary-btn {
-    background: linear-gradient(135deg, #002fff 0%, #0066ff 100%) !important;
-    box-shadow: var(--primary-glow) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5) !important;
-}
-
-.ai-secondary-btn {
-    background: linear-gradient(135deg, #6600ff 0%, #9900ff 100%) !important;
-    box-shadow: var(--secondary-glow) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    color: white !important;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4) !important;
-}
-
-/* Text glow */
-.ai-text {
-    color: white !important;
-    text-shadow: 0 0 15px rgba(0, 200, 255, 0.7),
-                 0 0 30px rgba(0, 150, 255, 0.4) !important;
-    background: rgba(0, 0, 0, 0.3) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(0, 102, 255, 0.3) !important;
-}
-
-/* Overlay glow effect */
-.ai-overlay-image {
-    filter: brightness(1.1) contrast(1.2) drop-shadow(0 0 20px rgba(0, 102, 255, 0.5)) !important;
-}
     `;
     document.head.appendChild(style);
     
@@ -553,15 +482,6 @@ function setupVideoFreeze() {
 
 // Run it
 setupVideoFreeze();
-
-function initWidget() {
-    const widget = document.getElementById('mobilewiseAIWidget');
-    if (widget) {
-        widget.classList.add('deep-space-theme');
-        // OR if you want to keep the class name consistent:
-        widget.setAttribute('data-theme', 'deep-space');
-    }
-}
     
     // Close overlay function
     function closeOverlay() {
