@@ -103,9 +103,9 @@
         /* Buttons */
         .ai-action-buttons {
             position: absolute;
-            bottom: 10px;
-            left: 20px;
-            right: 20px;
+            bottom: 3px;
+            left: 10px;
+            right: 10px;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -113,7 +113,7 @@
         }
         
         .ai-action-btn {
-            padding: 10px;
+            padding: 7px;
             border: none;
             border-radius: 10px;
             font-size: 15px;
