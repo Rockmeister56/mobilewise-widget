@@ -63,24 +63,27 @@
         .ai-text-container {
             position: absolute;
             bottom: 160px;
-            left: 10px;
-            right: 10px;
+            left: 100px;
+            right: 100px;
             text-align: center;
+            padding: 10px 12px !important; /* ← First number: top/bottom, Second: left/right */
+            min-height: 50px !important;   /* ← MINIMUM HEIGHT */
+            max-height: 50px !important;   /* ← MAXIMUM HEIGHT */
             z-index: 3;
         }
         
         .ai-text {
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(255, 255, 255, 0.85);
             color: white;
             padding: 12px 15px;
             border-radius: 10px;
             font-size: 14px;
-            min-height: 60px;
+            min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            line-height: 1.4;
+            line-height: 1.8;
         }
         
         .typing-cursor {
