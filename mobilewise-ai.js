@@ -100,45 +100,28 @@
             51%, 100% { opacity: 0; }
         }
         
-       /* ===== FORCE BUTTONS SMALLER - ADD THIS CSS ===== */
-/* Add this AT THE END of your CSS file or in a <style> tag */
-
-/* 1. TARGET THE BUTTON CONTAINER - MOVE IT DOWN */
-.ai-action-buttons {
-    bottom: 60px !important; /* Moves buttons DOWN */
-    gap: 5px !important;     /* Less space between buttons */
-}
-
-/* 2. FORCE BUTTONS TO BE SMALLER - OVERRIDE EVERYTHING */
-.ai-action-btn {
-    padding: 8px !important;        /* WAS: 13px - Makes buttons SHORTER */
-    font-size: 13px !important;     /* WAS: 15px - Smaller text */
-    height: 36px !important;        /* SET FIXED HEIGHT - Controls actual size */
-    min-height: 36px !important;    /* Prevents shrinking */
-    line-height: 1 !important;      /* Tighter text spacing */
-}
-
-/* 3. SPECIFICALLY TARGET EACH BUTTON TYPE */
-.ai-primary-btn,
-.ai-secondary-btn {
-    height: 36px !important;
-    padding: 8px !important;
-    font-size: 13px !important;
-}
-
-/* 4. MOBILE SPECIFIC - EVEN SMALLER ON PHONES */
-@media (max-width: 768px) {
-    .ai-action-buttons {
-        bottom: 50px !important;
-        gap: 4px !important;
-    }
-    
-    .ai-action-btn {
-        padding: 6px !important;
-        font-size: 12px !important;
-        height: 32px !important;
-    }
-}
+        /* Buttons */
+        .ai-action-buttons {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 3;
+        }
+        
+        .ai-action-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
         
         .ai-primary-btn {
             background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
