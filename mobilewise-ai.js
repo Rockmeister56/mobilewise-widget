@@ -59,31 +59,30 @@
             filter: brightness(0.98);
         }
         
-        /* Text container - GIVES SPACE for text to expand */
+        /* Copy and replace your current .ai-text-container and .ai-text */
 .ai-text-container {
     position: absolute;
-    bottom: 90px;      /* 20px LOWER */
-    left: 20px;        /* WIDER PARENT - allows text to expand */
-    right: 20px;       /* WIDER PARENT - allows text to expand */
+    bottom: 105px;
+    left: 30px;
+    right: 30px;
     text-align: center;
     z-index: 3;
 }
 
-/* Text box - ACTUAL BLACK BOX that gets wider */
 .ai-text {
     background: rgba(0, 0, 0, 0.85);
     color: white;
-    padding: 12px 8px !important;  /* 40% WIDER (less side padding) */
+    padding: 12px 15px;
     border-radius: 20px;
     font-size: 14px;
-    min-height: 50px;              /* PROPER HEIGHT */
-    max-height: 50px;              /* PROPER HEIGHT */
+    min-height: 50px;
+    max-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     line-height: 1.4;
-    width: 100%;                   /* USE FULL PARENT WIDTH */
+    width: 100%;
 }
         
         .typing-cursor {
