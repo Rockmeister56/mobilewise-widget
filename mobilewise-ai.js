@@ -261,38 +261,35 @@
             }
         }
 
-        /* ===== DEEP SPACE HOLOGRAM THEME ===== */
-/* ADD THIS TO THE TOP OF YOUR WIDGET CSS FILE */
+        /* ===== WIDGET THEME SCAFFOLDING ===== */
+/* Add this to widget CSS - creates self-contained theme system */
 
-:root, #mobilewiseAIWidget, .ai-button-container {
-    /* Color Variables */
-    --charcoal-black: #0a0a0a;
-    --charcoal-dark: #121212;
-    --charcoal-medium: #1e1e1e;
-    --charcoal-light: #2a2a2a;
-    --glow-blue: #0066ff;
-    --glow-cyan: #00ccff;
-    --glow-purple: #6600ff;
+/* Default theme variables INSIDE widget */
+#mobilewiseAIWidget {
+    /* Deep Space Theme (default) */
+    --widget-primary: #121212;
+    --widget-secondary: #1e1e1e;
+    --widget-accent: #2a2a2a;
+    --widget-gradient: linear-gradient(135deg, #0a0a0a, #121212, #1e1e1e);
+    --widget-glow: 0 0 30px rgba(0, 102, 255, 0.6);
     
-    /* Background Gradient - Charcoal */
-    --client-primary: #121212;
-    --client-secondary: #1e1e1e;
-    --client-accent: #2a2a2a;
-    --primary-gradient: linear-gradient(135deg, #0a0a0a, #121212, #1e1e1e);
+    /* Apply to widget */
+    background: var(--widget-gradient) !important;
+    box-shadow: var(--widget-glow) !important;
 }
 
-/* Then add all the glow effects AFTER the theme variables */
-#mobilewiseAIWidget,
-.ai-button-container {
-    background: var(--primary-gradient) !important;
-    box-shadow: 0 0 0 1px rgba(0, 102, 255, 0.4),
-                0 0 30px rgba(0, 102, 255, 0.6),
-                0 0 60px rgba(0, 102, 255, 0.3) !important;
-    border: 1px solid rgba(0, 102, 255, 0.5) !important;
-    border-radius: 20px !important;
+/* Theme classes for different looks */
+#mobilewiseAIWidget.theme-deep-space {
+    --widget-primary: #121212;
+    --widget-gradient: linear-gradient(135deg, #0a0a0a, #121212, #1e1e1e);
+    --widget-glow: 0 0 30px rgba(0, 102, 255, 0.6);
 }
 
-/* ... rest of your widget CSS ... */
+#mobilewiseAIWidget.theme-deep-blue {
+    --widget-primary: #052c99;
+    --widget-gradient: linear-gradient(135deg, #0A1428, #1048c0, #003674, #1a49ae);
+    --widget-glow: 0 0 20px rgba(41, 128, 185, 0.5);
+}
     `;
     document.head.appendChild(style);
     
