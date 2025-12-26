@@ -305,30 +305,30 @@
     document.body.insertAdjacentHTML('beforeend', widgetHTML);
     
     // ======== FUNCTIONALITY ========
-    
-    // Video loop
-    const video = document.getElementById('avatarVideo');
-    video.addEventListener('ended', function() {
-        this.currentTime = 0;
-        this.play();
-    });
-    
-    // Typing animation
-    function typeText(element, text, speed = 50) {
-        element.innerHTML = '';
-        let i = 0;
-        
-        function type() {
-            if (i < text.length) {
-                element.innerHTML = text.substring(0, i + 1) + '<span class="typing-cursor"></span>';
-                i++;
-                setTimeout(type, speed);
-            } else {
-                element.innerHTML = text;
+     
+        // Freeze video at end instead of looping
+        document.getElementById('avatarVideo').addEventListener('ended', function() {
+            this.pause();
+            this.classList.add('video-frozen');
+        });
+
+        // Animated typing text
+        function typeText(element, text, speed = 50) {
+            element.innerHTML = '';
+            let i = 0;
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML = text.substring(0, i + 1) + '<span class="typing-cursor"></span>';
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    element.innerHTML = text;
+                }
             }
+            type();
         }
-        type();
-    }
+
     
     // Show widget
     setTimeout(() => {
