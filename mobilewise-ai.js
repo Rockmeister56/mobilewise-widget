@@ -59,32 +59,32 @@
             filter: brightness(0.98);
         }
         
-        /* Text */
-        .ai-text-container {
-            position: absolute;
-            bottom: 160px;
-            left: 100px;
-            right: 100px;
-            text-align: center;
-            padding: 10px 12px !important; /* ← First number: top/bottom, Second: left/right */
-            min-height: 50px !important;   /* ← MINIMUM HEIGHT */
-            max-height: 50px !important;   /* ← MAXIMUM HEIGHT */
-            z-index: 3;
-        }
-        
-        .ai-text {
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            min-height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            line-height: 1.4;
-        }
+        /* Text container - GIVES SPACE for text to expand */
+.ai-text-container {
+    position: absolute;
+    bottom: 90px;      /* 20px LOWER */
+    left: 20px;        /* WIDER PARENT - allows text to expand */
+    right: 20px;       /* WIDER PARENT - allows text to expand */
+    text-align: center;
+    z-index: 3;
+}
+
+/* Text box - ACTUAL BLACK BOX that gets wider */
+.ai-text {
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 12px 8px !important;  /* 40% WIDER (less side padding) */
+    border-radius: 20px;
+    font-size: 14px;
+    min-height: 50px;              /* PROPER HEIGHT */
+    max-height: 50px;              /* PROPER HEIGHT */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    line-height: 1.4;
+    width: 100%;                   /* USE FULL PARENT WIDTH */
+}
         
         .typing-cursor {
             display: inline-block;
