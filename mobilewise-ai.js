@@ -122,6 +122,8 @@
             transition: all 0.3s;
             text-align: center;
         }
+
+        .ai-action-btn { padding: 8px !important; font-size: 14px !important; }
         
         .ai-primary-btn {
             background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
