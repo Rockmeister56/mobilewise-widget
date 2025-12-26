@@ -103,8 +103,8 @@
 .ai-action-buttons {
     position: absolute;
     bottom: 35px;          /* WAS: 3px - NOW: 20px LOWER (3 + 20 = 23) */
-    left: 40px;            /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
-    right: 40px;           /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
+    left: 50px;            /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
+    right: 50px;           /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
     display: flex;
     flex-direction: column;
     gap: 15px;              /* WAS: 8px - NOW: 4px gap between buttons */
@@ -126,14 +126,14 @@
 .ai-primary-btn {
     background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
     color: white;
-    box-shadow: 0 4px 15px rgba(25, 0, 255, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 1);
 }
 
 .ai-secondary-btn {
     background: linear-gradient(135deg, #6f00ffff 0%, #060a1c 100%);
     color: #ffffffff;
     border: 2px solid #002fff;
-    box-shadow: 0 4px 10px rgba(68, 0, 255, 1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
 }        
         .ai-primary-btn:hover {
             transform: translateY(-2px);
