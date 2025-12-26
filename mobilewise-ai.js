@@ -48,6 +48,17 @@
     border-radius: 12px;
     overflow: hidden;
 }
+
+   .ai-video {
+        width: 100%;
+        height: auto;
+        border-radius: 15px;
+        position: relative;
+        z-index: 1;
+        top: 120px; /* Adjusted for right side */
+        transform: scale(0.75);
+        transform-origin: center center;
+    }
         
         .video-frozen {
             filter: brightness(0.98);
