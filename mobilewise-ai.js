@@ -21,7 +21,7 @@
         #mobilewiseAIWidget {
             position: fixed;
             bottom: 5px;
-            right: 10px;
+            right: 100px;
             width: 400px;
             height: 430px;
             z-index: 10000;
