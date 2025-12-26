@@ -126,14 +126,14 @@
         .ai-primary-btn {
             background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 1);
+            box-shadow: 0 4px 15px rgba(25, 0, 255, 1);
         }
         
         .ai-secondary-btn {
             background: linear-gradient(135deg, #6f00ffff 0%, #060a1c 100%);
             color: #ffffffff;
             border: 2px solid #002fff;
-            box-shadow: 0 4px 10px rgba(255, 255, 255, 1);
+            box-shadow: 0 4px 10px rgba(68, 0, 255, 1);
         }
 
         /* Example: Smaller buttons */
