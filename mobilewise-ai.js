@@ -260,35 +260,76 @@
                 border-radius: 0;
             }
         }
+            /* ===== GLOW EFFECTS FOR INTERFACE ===== */
 
-        /* ===== WIDGET THEME SCAFFOLDING ===== */
-/* Add this to widget CSS - creates self-contained theme system */
-
-/* Default theme variables INSIDE widget */
-#mobilewiseAIWidget {
-    /* Deep Space Theme (default) */
-    --widget-primary: #121212;
-    --widget-secondary: #1e1e1e;
-    --widget-accent: #2a2a2a;
-    --widget-gradient: linear-gradient(135deg, #0a0a0a, #121212, #1e1e1e);
-    --widget-glow: 0 0 30px rgba(0, 102, 255, 0.6);
-    
-    /* Apply to widget */
-    background: var(--widget-gradient) !important;
-    box-shadow: var(--widget-glow) !important;
+/* Main widget container glow */
+#mobilewiseAIWidget,
+.ai-button-container {
+    box-shadow: var(--interface-shadow) !important;
+    border: 1px solid rgba(0, 102, 255, 0.4) !important;
+    background: var(--primary-gradient) !important;
+    border-radius: 20px !important;
+    position: relative;
 }
 
-/* Theme classes for different looks */
-#mobilewiseAIWidget.theme-deep-space {
-    --widget-primary: #121212;
-    --widget-gradient: linear-gradient(135deg, #0a0a0a, #121212, #1e1e1e);
-    --widget-glow: 0 0 30px rgba(0, 102, 255, 0.6);
+/* Add pulsing glow animation */
+@keyframes pulse-glow {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(0, 102, 255, 0.5),
+                    0 0 40px rgba(0, 102, 255, 0.3),
+                    0 0 60px rgba(0, 102, 255, 0.1);
+    }
+    50% { 
+        box-shadow: 0 0 30px rgba(0, 102, 255, 0.7),
+                    0 0 60px rgba(0, 102, 255, 0.4),
+                    0 0 90px rgba(0, 102, 255, 0.2);
+    }
 }
 
-#mobilewiseAIWidget.theme-deep-blue {
-    --widget-primary: #052c99;
-    --widget-gradient: linear-gradient(135deg, #0A1428, #1048c0, #003674, #1a49ae);
-    --widget-glow: 0 0 20px rgba(41, 128, 185, 0.5);
+#mobilewiseAIWidget:hover,
+.ai-button-container:hover {
+    animation: pulse-glow 2s infinite;
+}
+
+/* Video container with glow */
+.ai-video-container {
+    box-shadow: 0 0 25px rgba(0, 102, 255, 0.6),
+                0 0 50px rgba(0, 102, 255, 0.3),
+                inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    border: 2px solid rgba(0, 102, 255, 0.5) !important;
+    border-radius: 15px !important;
+}
+
+/* Buttons with intense glow */
+.ai-primary-btn {
+    background: linear-gradient(135deg, #002fff 0%, #0066ff 100%) !important;
+    box-shadow: var(--primary-glow) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5) !important;
+}
+
+.ai-secondary-btn {
+    background: linear-gradient(135deg, #6600ff 0%, #9900ff 100%) !important;
+    box-shadow: var(--secondary-glow) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Text glow */
+.ai-text {
+    color: white !important;
+    text-shadow: 0 0 15px rgba(0, 200, 255, 0.7),
+                 0 0 30px rgba(0, 150, 255, 0.4) !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(0, 102, 255, 0.3) !important;
+}
+
+/* Overlay glow effect */
+.ai-overlay-image {
+    filter: brightness(1.1) contrast(1.2) drop-shadow(0 0 20px rgba(0, 102, 255, 0.5)) !important;
 }
     `;
     document.head.appendChild(style);
