@@ -260,6 +260,39 @@
                 border-radius: 0;
             }
         }
+
+        /* ===== DEEP SPACE HOLOGRAM THEME ===== */
+/* ADD THIS TO THE TOP OF YOUR WIDGET CSS FILE */
+
+:root, #mobilewiseAIWidget, .ai-button-container {
+    /* Color Variables */
+    --charcoal-black: #0a0a0a;
+    --charcoal-dark: #121212;
+    --charcoal-medium: #1e1e1e;
+    --charcoal-light: #2a2a2a;
+    --glow-blue: #0066ff;
+    --glow-cyan: #00ccff;
+    --glow-purple: #6600ff;
+    
+    /* Background Gradient - Charcoal */
+    --client-primary: #121212;
+    --client-secondary: #1e1e1e;
+    --client-accent: #2a2a2a;
+    --primary-gradient: linear-gradient(135deg, #0a0a0a, #121212, #1e1e1e);
+}
+
+/* Then add all the glow effects AFTER the theme variables */
+#mobilewiseAIWidget,
+.ai-button-container {
+    background: var(--primary-gradient) !important;
+    box-shadow: 0 0 0 1px rgba(0, 102, 255, 0.4),
+                0 0 30px rgba(0, 102, 255, 0.6),
+                0 0 60px rgba(0, 102, 255, 0.3) !important;
+    border: 1px solid rgba(0, 102, 255, 0.5) !important;
+    border-radius: 20px !important;
+}
+
+/* ... rest of your widget CSS ... */
     `;
     document.head.appendChild(style);
     
@@ -482,6 +515,15 @@ function setupVideoFreeze() {
 
 // Run it
 setupVideoFreeze();
+
+function initWidget() {
+    const widget = document.getElementById('mobilewiseAIWidget');
+    if (widget) {
+        widget.classList.add('deep-space-theme');
+        // OR if you want to keep the class name consistent:
+        widget.setAttribute('data-theme', 'deep-space');
+    }
+}
     
     // Close overlay function
     function closeOverlay() {
