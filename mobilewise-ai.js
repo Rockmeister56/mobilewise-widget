@@ -303,14 +303,6 @@
     `;
     
     document.body.insertAdjacentHTML('beforeend', widgetHTML);
-    
-    // ======== FUNCTIONALITY ========
-     
-        // Freeze video at end instead of looping
-        document.getElementById('avatarVideo').addEventListener('ended', function() {
-            this.pause();
-            this.classList.add('video-frozen');
-        });
 
         // Animated typing text
         function typeText(element, text, speed = 50) {
@@ -449,6 +441,47 @@
             }, 3000);
         }
     });
+
+    // VIDEO FREEZE FUNCTION - Add this to your widget JavaScript
+function setupVideoFreeze() {
+    // Wait for widget to load
+    setTimeout(() => {
+        // Find the AI video
+        const video = document.querySelector('.ai-video, .ai-video-container video, [class*="ai"] video');
+        
+        if (video) {
+            console.log('🎥 Found video:', video);
+            
+            // 1. Disable HTML loop attribute
+            video.removeAttribute('loop');
+            video.loop = false;
+            
+            // 2. Add freeze on end
+            video.addEventListener('ended', () => {
+                console.log('❄️ Freezing video...');
+                video.pause();
+                video.classList.add('video-frozen');
+            });
+            
+            // 3. Optional: Add visual freeze style
+            const style = document.createElement('style');
+            style.textContent = `
+                .video-frozen {
+                    filter: brightness(0.98) !important;
+                    animation: none !important;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            console.log('✅ Video freeze configured');
+        } else {
+            console.warn('⚠️ No video found for freezing');
+        }
+    }, 3000); // Wait 3 seconds for everything to load
+}
+
+// Run it
+setupVideoFreeze();
     
     // Close overlay function
     function closeOverlay() {
