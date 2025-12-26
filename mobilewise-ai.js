@@ -37,6 +37,95 @@
             opacity: 1;
             pointer-events: auto;
         }
+        
+        /* Video container */
+ .ai-video-container {
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    width: 300px;
+    height: 175px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+        
+        .video-frozen {
+            filter: brightness(0.98);
+        }
+        
+        /* Text */
+        .ai-text-container {
+            position: absolute;
+            bottom: 110px;
+            left: 20px;
+            right: 20px;
+            text-align: center;
+            z-index: 3;
+        }
+        
+        .ai-text {
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            line-height: 1.4;
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: white;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* Buttons */
+        .ai-action-buttons {
+            position: absolute;
+            bottom: 3px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 3;
+        }
+        
+        .ai-action-btn {
+            padding: 7px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .ai-primary-btn {
+            background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(25, 0, 255, 1);
+        }
+        
+        .ai-secondary-btn {
+            background: linear-gradient(135deg, #6f00ffff 0%, #060a1c 100%);
+            color: #ffffffff;
+            border: 2px solid #002fff;
+            box-shadow: 0 4px 10px rgba(68, 0, 255, 1);
+        }
 
         /* Example: Smaller buttons */
 .ai-action-buttons {
