@@ -137,14 +137,14 @@
 
         /* Example: Smaller buttons */
 .ai-action-buttons {
-    bottom: 40px; /* Move buttons DOWN 10px */
-    gap: 6px; /* Reduce space between buttons */
+    bottom: 30px; /* Move buttons DOWN 10px */
+    gap: 8px; /* Reduce space between buttons */
 }
 
 .ai-action-btn {
     padding: 10px; /* Reduce padding (makes shorter) */
     font-size: 14px; /* Smaller text */
-    height: 40px; /* Fixed shorter height */
+    height: 30px; /* Fixed shorter height */
 }
         
         .ai-primary-btn:hover {
