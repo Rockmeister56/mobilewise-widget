@@ -73,7 +73,7 @@
         }
         
         .ai-text {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(25, 0, 255, 0.85);
             color: white;
             padding: 12px 15px;
             border-radius: 10px;
@@ -126,14 +126,14 @@
         .ai-primary-btn {
             background: linear-gradient(135deg, #002fff 0%, #060a1c 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(0,47,255,0.3);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 1);
         }
         
         .ai-secondary-btn {
             background: linear-gradient(135deg, #6f00ffff 0%, #060a1c 100%);
-            color: #333;
+            color: #ffffffff;
             border: 2px solid #002fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 1);
         }
 
         /* Example: Smaller buttons */
@@ -157,7 +157,7 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             background: white;
-            color: #333;
+            color: #1100ffff;
         }
         
         .play-icon {
@@ -232,7 +232,7 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            background: rgba(0,0,0,0.7);
+            background: rgba(255, 255, 255, 1);
             color: white;
             border: none;
             width: 40px;
