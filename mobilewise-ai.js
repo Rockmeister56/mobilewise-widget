@@ -102,12 +102,12 @@
 /* Buttons */
 .ai-action-buttons {
     position: absolute;
-    bottom: 35px;          /* WAS: 3px - NOW: 20px LOWER (3 + 20 = 23) */
+    bottom: 45px;          /* WAS: 3px - NOW: 20px LOWER (3 + 20 = 23) */
     left: 50px;            /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
     right: 50px;           /* WAS: 10px - Makes buttons NARROWER (20% narrower) */
     display: flex;
     flex-direction: column;
-    gap: 15px;              /* WAS: 8px - NOW: 4px gap between buttons */
+    gap: 11px;              /* WAS: 8px - NOW: 4px gap between buttons */
     z-index: 3;
 }
 
