@@ -267,7 +267,7 @@
     height: auto;
     aspect-ratio: 16 / 9;
     left: 50%;
-    top: 102px;                     /* ← MAIN POSITION CONTROL */
+    top:  98px;                     /* ← MAIN POSITION CONTROL */
     transform: translateX(-50%) translateY(var(--video-vertical-adjust, 0px)); /* ← FINE-TUNE CONTROL */
     border-radius: 8px;
     overflow: visible;
