@@ -261,8 +261,8 @@
 
     /* Video container - lowered */
     .ai-video-container {
-        width: 95%;
-        height: 140px;
+        width: 100%;
+        height: 110px;
         left: 50%;
         top: 137px;                      /* ↓ Lowered by 7px from 100px */
         transform: translateX(-50%);
