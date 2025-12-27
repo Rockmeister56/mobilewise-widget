@@ -261,10 +261,10 @@
 
     /* Video container - lowered */
     .ai-video-container {
-        width: 85%;
-        height: 160px;
+        width: 95%;
+        height: 140px;
         left: 50%;
-        top: 127px;                      /* ↓ Lowered by 7px from 100px */
+        top: 137px;                      /* ↓ Lowered by 7px from 100px */
         transform: translateX(-50%);
         border-radius: 10px;
     }
