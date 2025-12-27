@@ -262,16 +262,16 @@
     /* Video container - lowered */
     .ai-video-container {
         width: 85%;
-        height: 160px;
+        height: 150px;
         left: 50%;
-        top: 117px;                      /* ↓ Lowered by 7px from 100px */
+        top: 125px;                      /* ↓ Lowered by 7px from 100px */
         transform: translateX(-50%);
         border-radius: 10px;
     }
 
     /* Text container - lowered */
     .ai-text-container {
-        bottom: 137px;                   /* ↓ Lowered by 7px from 130px */
+        bottom: 125px;                   /* ↓ Lowered by 7px from 130px */
         left: 20px;
         right: 20px;
     }
