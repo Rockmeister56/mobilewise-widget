@@ -264,7 +264,7 @@
         width: 100%;
         height: 110px;
         left: 50%;
-        top: 147px;                      /* ↓ Lowered by 7px from 100px */
+        top: 117px;                      /* ↓ Lowered by 7px from 100px */
         transform: translateX(-50%);
         border-radius: 5px;
     }
