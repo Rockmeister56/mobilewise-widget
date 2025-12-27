@@ -238,28 +238,81 @@
             background: rgba(255, 255, 255, 1);
         }
         
-        /* Mobile adjustments */
-        @media (max-width: 768px) {
-            #mobilewiseAIWidget {
-                width: 300px;
-                height: 400px;
-                right: 10px;
-                bottom: 10px;
-            }
-            
-            .ai-video-container {
-                width: 220px;
-                left: 40px;
-                top: 110px;
-            }
-            
-            #voiceChatContainer {
-                width: 100%;
-                height: 100vh;
-                max-width: none;
-                border-radius: 0;
-            }
-        }
+ /* ===== MOBILE ADJUSTMENTS (768px and below) ===== */
+@media (max-width: 768px) {
+    #mobilewiseAIWidget {
+        width: 92vw;          /* Wider, responsive to screen */
+        max-width: 350px;     /* But not too wide */
+        height: 440px;        /* Taller if needed */
+        bottom: 15px;         /* Raised from very bottom */
+        right: 50%;
+        transform: translateX(50%) translateY(100px); /* Center horizontally */
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                    opacity 0.8s ease;
+    }
+
+    #mobilewiseAIWidget.visible {
+        transform: translateX(50%) translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Video container - adjust position and size */
+    .ai-video-container {
+        width: 85%;           /* Proportional to widget */
+        height: 160px;        /* Slightly shorter */
+        left: 50%;
+        top: 100px;           /* Adjust up/down here */
+        transform: translateX(-50%); /* Center it */
+        border-radius: 10px;
+    }
+
+    /* Text container - adjust spacing */
+    .ai-text-container {
+        bottom: 130px;        /* Closer to video */
+        left: 20px;
+        right: 20px;
+    }
+
+    .ai-text {
+        font-size: 15px;      /* Slightly smaller */
+        padding: 10px 16px !important;
+        min-height: 45px;
+        max-height: 45px;
+    }
+
+    /* Buttons - adjust width and spacing */
+    .ai-action-buttons {
+        bottom: 20px;
+        left: 25px;
+        right: 25px;
+        gap: 10px;
+    }
+
+    .ai-action-btn {
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+
+    /* Voice Chat Overlay - full mobile takeover */
+    #voiceChatContainer {
+        width: 100%;
+        height: 100vh;
+        max-width: none;
+        border-radius: 0;
+    }
+
+    .close-voice-chat {
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+}
     `;
     document.head.appendChild(style);
     
