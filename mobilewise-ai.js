@@ -282,13 +282,13 @@
 
     /* Text container - lowered */
     .ai-text-container {
-        bottom: 137px;                   /* ↓ Lowered by 7px from 130px */
-        left: 20px;
-        right: 20px;
+        bottom: 127px;                   /* ↓ Lowered by 7px from 130px */
+        left:  30px;
+        right: 30px;
     }
 
     .ai-text {
-        font-size: 14px;                 /* Slightly smaller */
+        font-size: 16px;                 /* Slightly smaller */
         padding: 10px 14px !important;   /* Tighter padding */
         min-height: 44px;
         max-height: 44px;
