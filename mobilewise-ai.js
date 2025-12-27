@@ -241,12 +241,12 @@
  /* ===== MOBILE ADJUSTMENTS (768px and below) ===== */
 @media (max-width: 768px) {
     #mobilewiseAIWidget {
-        width: 92vw;          /* Wider, responsive to screen */
-        max-width: 350px;     /* But not too wide */
-        height: 440px;        /* Taller if needed */
-        bottom: 15px;         /* Raised from very bottom */
+        width: 92vw;
+        max-width: 350px;
+        height: 440px;
+        bottom: 8px;                     /* ↓ Lowered by ~7px from 15px */
         right: 50%;
-        transform: translateX(50%) translateY(100px); /* Center horizontally */
+        transform: translateX(50%) translateY(100px);
         opacity: 0;
         pointer-events: none;
         transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
@@ -259,45 +259,51 @@
         pointer-events: auto;
     }
 
-    /* Video container - adjust position and size */
+    /* Video container - lowered */
     .ai-video-container {
-        width: 85%;           /* Proportional to widget */
-        height: 160px;        /* Slightly shorter */
+        width: 85%;
+        height: 160px;
         left: 50%;
-        top: 100px;           /* Adjust up/down here */
-        transform: translateX(-50%); /* Center it */
+        top: 107px;                      /* ↓ Lowered by 7px from 100px */
+        transform: translateX(-50%);
         border-radius: 10px;
     }
 
-    /* Text container - adjust spacing */
+    /* Text container - lowered */
     .ai-text-container {
-        bottom: 130px;        /* Closer to video */
+        bottom: 137px;                   /* ↓ Lowered by 7px from 130px */
         left: 20px;
         right: 20px;
     }
 
     .ai-text {
-        font-size: 15px;      /* Slightly smaller */
-        padding: 10px 16px !important;
-        min-height: 45px;
-        max-height: 45px;
+        font-size: 14px;                 /* Slightly smaller */
+        padding: 10px 14px !important;   /* Tighter padding */
+        min-height: 44px;
+        max-height: 44px;
     }
 
-    /* Buttons - adjust width and spacing */
+    /* Buttons - 20% smaller and lowered */
     .ai-action-buttons {
-        bottom: 20px;
+        bottom: 10px;                    /* ↓ Lowered by 10px from 20px */
         left: 25px;
         right: 25px;
-        gap: 10px;
+        gap: 8px;                        /* Tighter gap */
     }
 
     .ai-action-btn {
-        padding: 10px;
-        font-size: 14px;
+        padding: 8px;                    /* ↓ Smaller padding */
+        font-size: 13px;                 /* ↓ Smaller font */
         border-radius: 8px;
+        transform: scale(0.8);           /* ↓ Shrinks button by 20% */
+        transform-origin: center;
     }
 
-    /* Voice Chat Overlay - full mobile takeover */
+    .ai-action-btn:hover {
+        transform: scale(0.82) translateY(-2px); /* Keep hover effect scaled */
+    }
+
+    /* Voice Chat Overlay */
     #voiceChatContainer {
         width: 100%;
         height: 100vh;
