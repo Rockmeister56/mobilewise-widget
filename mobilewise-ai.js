@@ -244,7 +244,7 @@
         width: 92vw;
         max-width: 350px;
         height: 440px;
-        bottom: 8px;                     /* ↓ Lowered by ~7px from 15px */
+        bottom: 4px;                     /* ↓ Lowered by ~7px from 15px */
         right: 50%;
         transform: translateX(50%) translateY(100px);
         opacity: 0;
@@ -264,7 +264,7 @@
         width: 85%;
         height: 160px;
         left: 50%;
-        top: 107px;                      /* ↓ Lowered by 7px from 100px */
+        top: 117px;                      /* ↓ Lowered by 7px from 100px */
         transform: translateX(-50%);
         border-radius: 10px;
     }
@@ -293,9 +293,9 @@
 
     .ai-action-btn {
         padding: 8px;                    /* ↓ Smaller padding */
-        font-size: 13px;                 /* ↓ Smaller font */
+        font-size: 15px;                 /* ↓ Smaller font */
         border-radius: 8px;
-        transform: scale(0.8);           /* ↓ Shrinks button by 20% */
+        transform: scale(1.2);           /* ↓ Shrinks button by 20% */
         transform-origin: center;
     }
 
