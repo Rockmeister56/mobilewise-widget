@@ -259,23 +259,24 @@
         pointer-events: auto;
     }
 
-  /* Video container - full video display */
+/* Video container - full video display */
 .ai-video-container {
-    width: 90%;                 /* Slightly wider for balance */
-    max-width: 280px;           /* Prevent overflow */
-    height: auto;               /* Auto height for aspect ratio */
-    aspect-ratio: 16 / 9;       /* Standard video ratio */
+    position: absolute;
+    width: 90%;
+    max-width: 280px;
+    height: auto;
+    aspect-ratio: 16 / 9;
     left: 50%;
-    top: 117px;
-    transform: translateX(-50%);
+    top: 102px;                     /* ← MAIN POSITION CONTROL */
+    transform: translateX(-50%) translateY(var(--video-vertical-adjust, 0px)); /* ← FINE-TUNE CONTROL */
     border-radius: 8px;
-    overflow: visible;          /* No cropping */
+    overflow: visible;
 }
 
 .ai-video-container video {
     width: 100%;
     height: 100%;
-    object-fit: contain;        /* Show entire video, no crop */
+    object-fit: contain;
     border-radius: 8px;
 }
 
