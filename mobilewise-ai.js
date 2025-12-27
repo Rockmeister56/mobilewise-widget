@@ -262,16 +262,16 @@
     /* Video container - lowered */
     .ai-video-container {
         width: 85%;
-        height: 150px;
+        height: 160px;
         left: 50%;
-        top: 125px;                      /* ↓ Lowered by 7px from 100px */
+        top: 127px;                      /* ↓ Lowered by 7px from 100px */
         transform: translateX(-50%);
         border-radius: 10px;
     }
 
     /* Text container - lowered */
     .ai-text-container {
-        bottom: 125px;                   /* ↓ Lowered by 7px from 130px */
+        bottom: 137px;                   /* ↓ Lowered by 7px from 130px */
         left: 20px;
         right: 20px;
     }
@@ -295,7 +295,7 @@
         padding: 8px;                    /* ↓ Smaller padding */
         font-size: 15px;                 /* ↓ Smaller font */
         border-radius: 8px;
-        transform: scale(1.2);           /* ↓ Shrinks button by 20% */
+        transform: scale(0.9);           /* ↓ Shrinks button by 20% */
         transform-origin: center;
     }
 
