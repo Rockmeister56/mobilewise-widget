@@ -241,10 +241,10 @@
  /* ===== MOBILE ADJUSTMENTS (768px and below) ===== */
 @media (max-width: 768px) {
     #mobilewiseAIWidget {
-        width: 92vw;
-        max-width: 350px;
-        height: 440px;
-        bottom: 4px;                     /* ↓ Lowered by ~7px from 15px */
+        width: 94vw;
+        max-width: 370px;
+        height: 430px;
+        bottom: 0px;                     /* ↓ Lowered by ~7px from 15px */
         right: 50%;
         transform: translateX(50%) translateY(100px);
         opacity: 0;
@@ -264,9 +264,9 @@
         width: 100%;
         height: 110px;
         left: 50%;
-        top: 137px;                      /* ↓ Lowered by 7px from 100px */
+        top: 147px;                      /* ↓ Lowered by 7px from 100px */
         transform: translateX(-50%);
-        border-radius: 10px;
+        border-radius: 5px;
     }
 
     /* Text container - lowered */
