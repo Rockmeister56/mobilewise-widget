@@ -282,7 +282,7 @@
 
     /* Text container - lowered */
     .ai-text-container {
-        bottom: 127px;                   /* ↓ Lowered by 7px from 130px */
+        bottom: 124px;                   /* ↓ Lowered by 7px from 130px */
         left:  30px;
         right: 30px;
     }
@@ -296,9 +296,9 @@
 
     /* Buttons - 20% smaller and lowered */
     .ai-action-buttons {
-        bottom: 10px;                    /* ↓ Lowered by 10px from 20px */
-        left: 25px;
-        right: 25px;
+        bottom: 15px;                    /* ↓ Lowered by 10px from 20px */
+        left: 28px;
+        right: 28px;
         gap: 8px;                        /* Tighter gap */
     }
 
