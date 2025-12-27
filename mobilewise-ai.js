@@ -259,15 +259,25 @@
         pointer-events: auto;
     }
 
-    /* Video container - lowered */
-    .ai-video-container {
-        width: 100%;
-        height: 110px;
-        left: 50%;
-        top: 117px;                      /* ↓ Lowered by 7px from 100px */
-        transform: translateX(-50%);
-        border-radius: 5px;
-    }
+  /* Video container - full video display */
+.ai-video-container {
+    width: 90%;                 /* Slightly wider for balance */
+    max-width: 280px;           /* Prevent overflow */
+    height: auto;               /* Auto height for aspect ratio */
+    aspect-ratio: 16 / 9;       /* Standard video ratio */
+    left: 50%;
+    top: 117px;
+    transform: translateX(-50%);
+    border-radius: 8px;
+    overflow: visible;          /* No cropping */
+}
+
+.ai-video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;        /* Show entire video, no crop */
+    border-radius: 8px;
+}
 
     /* Text container - lowered */
     .ai-text-container {
