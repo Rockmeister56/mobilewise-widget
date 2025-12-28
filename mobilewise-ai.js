@@ -407,110 +407,86 @@
         
     }, 1000);
     
-    // ======== GET AI ASSISTANCE - FIXED OVERLAY ========
-    document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
-        console.log('🎤 Opening AI Voice Assistant as overlay...');
+   // ======== GET AI ASSISTANCE - NEW TAB METHOD (NCI Demo 3 style) ========
+document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
+    console.log('🎤 Widget: Using NCI Demo 3 method (new tab)...');
+    
+    const originalText = this.innerHTML;
+    this.innerHTML = '🎤 Preparing microphone...';
+    this.disabled = true;
+    
+    try {
+        // 1. EXACT SAME PERMISSION REQUEST AS NCI DEMO 3
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true
+            } 
+        });
         
-        const originalText = this.innerHTML;
-        this.innerHTML = '🎤 Getting microphone...';
-        this.disabled = true;
+        // Stop stream immediately (we just need permission)
+        stream.getTracks().forEach(track => track.stop());
         
-        try {
-            // 1. Get microphone permission
-            const stream = await navigator.mediaDevices.getUserMedia({ 
-                audio: {
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: true
-                } 
-            });
-            
-            stream.getTracks().forEach(track => track.stop());
-            console.log('✅ Microphone permission granted');
-            
-            // 2. Generate parameters - USE OLD FORMAT FROM WORKING VERSION
-            const timestamp = Date.now();
-            
-            // CRITICAL FIX: Use the OLD URL format that works
-            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
-            
-            console.log('🔗 Generated URL:', url);
-            
-            // 3. Update button
-            this.innerHTML = '✅ Opening voice chat...';
-            
-            // 4. Hide widget
-            document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-            
-            // 5. Set iframe source and show overlay
+        // Store permission flag (same as NCI Demo 3)
+        localStorage.setItem('micPermissionGranted', 'true');
+        
+        // 2. Generate unique timestamp
+        const timestamp = Date.now();
+        
+        // 3. USE THE SAME URL FORMAT as NCI Demo 3 (CRITICAL)
+        const url = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
+        
+        console.log('✅ Permission granted, opening:', url);
+        
+        // 4. UPDATE BUTTON FEEDBACK
+        this.innerHTML = '✅ Opening voice chat...';
+        
+        // 5. HIDE WIDGET (keeps it clean)
+        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+        
+        // 6. OPEN IN NEW TAB (CRITICAL FIX - not iframe!)
+        // This is what makes it work on Android
+        window.open(url, '_blank');
+        
+        // 7. RESET BUTTON AFTER DELAY
+        setTimeout(() => {
+            this.innerHTML = originalText;
+            this.disabled = false;
+            // Optionally show widget again after 5 seconds
             setTimeout(() => {
-                const iframe = document.getElementById('voiceChatIframe');
-                const overlay = document.getElementById('voiceChatOverlay');
-                
-                console.log('📦 Loading iframe with URL...');
-                
-                // CRITICAL: Set iframe src (don't use base64 encoding)
-                iframe.src = url;
-                overlay.classList.add('active');
-                
-                // Send parameters via postMessage as backup
-                setTimeout(() => {
-                    try {
-                        iframe.contentWindow.postMessage({
-                            type: 'VOICE_CHAT_PARAMS',
-                            params: {
-                                autoStartVoice: 'true',
-                                micPermissionGranted: 'true',
-                                gestureInitiated: 'true',
-                                timestamp: timestamp,
-                                source: 'mobilewise-widget'
-                            }
-                        }, '*');
-                        console.log('📨 Sent params via postMessage');
-                    } catch (e) {
-                        console.log('⚠️ Could not send postMessage:', e.message);
-                    }
-                }, 1000);
-                
-                // Escape key to close
-                document.addEventListener('keydown', function closeOnEscape(e) {
-                    if (e.key === 'Escape') {
-                        closeOverlay();
-                        document.removeEventListener('keydown', closeOnEscape);
-                    }
-                });
-            }, 500);
-            
-            // 6. Reset button
+                if (!document.querySelector('#voiceChatOverlay.active')) {
+                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
+                }
+            }, 5000);
+        }, 1500);
+        
+    } catch (error) {
+        console.error('❌ Microphone permission denied:', error);
+        
+        // FALLBACK: Open without mic (still new tab)
+        this.innerHTML = '⚠️ Opening without mic...';
+        
+        const fallbackUrl = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget`;
+        
+        // Still open in new tab
+        window.open(fallbackUrl, '_blank');
+        
+        // Hide widget
+        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+        
+        // Reset button
+        setTimeout(() => {
+            this.innerHTML = originalText;
+            this.disabled = false;
             setTimeout(() => {
-                this.innerHTML = originalText;
-                this.disabled = false;
-            }, 1500);
-            
-        } catch (error) {
-            console.error('❌ Microphone permission denied:', error);
-            
-            // Open without mic
-            this.innerHTML = '⚠️ Opening without mic...';
-            
-            // Use simple URL format
-            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget`;
-            
-            // Show overlay with iframe
-            setTimeout(() => {
-                const iframe = document.getElementById('voiceChatIframe');
-                const overlay = document.getElementById('voiceChatOverlay');
-                
-                iframe.src = url;
-                overlay.classList.add('active');
-            }, 500);
-            
-            setTimeout(() => {
-                this.innerHTML = originalText;
-                this.disabled = false;
-            }, 3000);
-        }
-    });
+                if (!document.querySelector('#voiceChatOverlay.active')) {
+                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
+                }
+            }, 5000);
+        }, 3000);
+    }
+});
 
     // VIDEO FREEZE FUNCTION - Add this to your widget JavaScript
 function setupVideoFreeze() {
@@ -575,6 +551,20 @@ setupVideoFreeze();
             closeOverlay();
         }
     });
+
+    // Detect if mobile
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+// Choose method based on device
+if (isMobile) {
+    window.open(url, '_blank');  // Mobile → new tab
+} else {
+    // Desktop → iframe overlay
+    const iframe = document.getElementById('voiceChatIframe');
+    const overlay = document.getElementById('voiceChatOverlay');
+    iframe.src = url;
+    overlay.classList.add('active');
+}
     
     // Just Browsing
     document.getElementById('justBrowsingBtn').addEventListener('click', function() {
