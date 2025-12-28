@@ -330,16 +330,6 @@
         font-size: 20px;
     }
 }
-    .ai-emergency-btn {
-    background: linear-gradient(135deg, #ff9900 0%, #cc6600 100%) !important;
-    color: white !important;
-    animation: pulseEmergency 1.5s infinite !important;
-}
-
-@keyframes pulseEmergency {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
     `;
     document.head.appendChild(style);
     
@@ -417,254 +407,133 @@
         
     }, 1000);
     
- // ======== GET AI ASSISTANCE - NEW TAB METHOD (NCI Demo 3 style) ========
-document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
-    console.log('🎤 Widget: Using NCI Demo 3 method (new tab)...');
-    
-    const originalText = this.innerHTML;
-    this.innerHTML = '🎤 Preparing microphone...';
-    this.disabled = true;
-    
-    // Show emergency button after 3 seconds if stuck
-    setTimeout(() => {
-        if (this.innerHTML === '🎤 Preparing microphone...') {
-            showSkipMicOption();
-        }
-    }, 3000);
-    
-    try {
-        // First check for Android overlay issues
-        await checkForAndroidOverlay();
+    // ======== GET AI ASSISTANCE - FIXED OVERLAY ========
+    document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
+        console.log('🎤 Opening AI Voice Assistant as overlay...');
         
-        // 1. EXACT SAME PERMISSION REQUEST AS NCI DEMO 3
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            audio: {
-                echoCancellation: true,
-                noiseSuppression: true,
-                autoGainControl: true
-            } 
-        });
+        const originalText = this.innerHTML;
+        this.innerHTML = '🎤 Getting microphone...';
+        this.disabled = true;
         
-        // Stop stream immediately (we just need permission)
-        stream.getTracks().forEach(track => track.stop());
-        
-        // Store permission flag (same as NCI Demo 3)
-        localStorage.setItem('micPermissionGranted', 'true');
-        
-        // 2. Generate unique timestamp
-        const timestamp = Date.now();
-        
-        // 3. USE THE SAME URL FORMAT as NCI Demo 3 (CRITICAL)
-        const url = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
-        
-        console.log('✅ Permission granted, opening:', url);
-        
-        // 4. UPDATE BUTTON FEEDBACK
-        this.innerHTML = '✅ Opening voice chat...';
-        
-        // 5. HIDE WIDGET (keeps it clean)
-        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-        
-        // 6. OPEN IN NEW TAB (CRITICAL FIX - not iframe!)
-        // Check if mobile or desktop
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        
-        if (isMobile) {
-            // Mobile → new tab
-            window.open(url, '_blank');
-        } else {
-            // Desktop → iframe overlay
-            const iframe = document.getElementById('voiceChatIframe');
-            const overlay = document.getElementById('voiceChatOverlay');
-            iframe.src = url;
-            overlay.classList.add('active');
-        }
-        
-        // 7. RESET BUTTON AFTER DELAY
-        setTimeout(() => {
-            this.innerHTML = originalText;
-            this.disabled = false;
-            // Optionally show widget again after 5 seconds
-            setTimeout(() => {
-                if (!document.querySelector('#voiceChatOverlay.active')) {
-                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
-                }
-            }, 5000);
-        }, 1500);
-        
-    } catch (error) {
-        console.error('❌ Microphone error:', error);
-        
-        // Check if it's an overlay error
-        if (error.message.includes('overlay') || error.name === 'NotAllowedError') {
-            // SHOW OVERLAY WARNING
-            showAndroidOverlayWarning();
-            showSkipMicOption();
-            this.innerHTML = '⚠️ Overlay blocking mic';
-            this.disabled = false;
-            return;
-        }
-        
-        // FALLBACK: Open without mic (still new tab)
-        this.innerHTML = '⚠️ Opening without mic...';
-        
-        const fallbackUrl = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget`;
-        
-        // Open based on device
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        
-        if (isMobile) {
-            window.open(fallbackUrl, '_blank');
-        } else {
-            const iframe = document.getElementById('voiceChatIframe');
-            const overlay = document.getElementById('voiceChatOverlay');
-            iframe.src = fallbackUrl;
-            overlay.classList.add('active');
-        }
-        
-        // Hide widget
-        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-        
-        // Reset button
-        setTimeout(() => {
-            this.innerHTML = originalText;
-            this.disabled = false;
-            setTimeout(() => {
-                if (!document.querySelector('#voiceChatOverlay.active')) {
-                    document.getElementById('mobilewiseAIWidget').classList.add('visible');
-                }
-            }, 5000);
-        }, 3000);
-    }
-});
-
-// ======== ANDROID OVERLAY DETECTION ========
-function checkForAndroidOverlay() {
-    return new Promise((resolve, reject) => {
-        if (!/Android/i.test(navigator.userAgent)) {
-            resolve(); // Not Android, skip check
-            return;
-        }
-        
-        // Test if we can request permission
-        const testPermission = navigator.permissions.query({ name: 'microphone' });
-        
-        testPermission.then(permissionStatus => {
-            if (permissionStatus.state === 'prompt') {
-                resolve(); // Can ask for permission
-            } else {
-                reject(new Error('Android overlay blocking detected'));
-            }
-        }).catch(() => {
-            reject(new Error('Permission query failed - likely overlay issue'));
-        });
-    });
-}
-
-// ======== ANDROID OVERLAY WARNING ========
-function showAndroidOverlayWarning() {
-    const warningHTML = `
-        <div id="androidOverlayWarning" style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.9);
-            z-index: 30000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        ">
-            <div style="
-                background: white;
-                padding: 25px;
-                border-radius: 15px;
-                max-width: 400px;
-                text-align: center;
-            ">
-                <h3 style="color: #ff0000; margin-bottom: 15px;">⚠️ Android Permission Issue</h3>
-                <p style="margin-bottom: 15px;">
-                    <strong>To fix this:</strong>
-                </p>
-                <ol style="text-align: left; margin-bottom: 20px; padding-left: 20px;">
-                    <li>Close <strong>all other apps</strong> (especially messaging apps)</li>
-                    <li>Go to <strong>Settings → Apps → Special app access → Display over other apps</strong></li>
-                    <li>Disable overlays for apps like Facebook Messenger, WhatsApp, etc.</li>
-                    <li>Return here and tap the button again</li>
-                </ol>
-                <button onclick="document.getElementById('androidOverlayWarning').remove()" 
-                        style="
-                            background: #002fff;
-                            color: white;
-                            border: none;
-                            padding: 10px 20px;
-                            border-radius: 8px;
-                            font-weight: bold;
-                            cursor: pointer;
-                        ">
-                    I've closed overlays
-                </button>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', warningHTML);
-}
-
-// ======== EMERGENCY SKIP MICROPHONE BUTTON ========
-function showSkipMicOption() {
-    // Check if button already exists
-    let skipBtn = document.getElementById('skipMicBtn');
-    
-    if (!skipBtn) {
-        // Create emergency button
-        skipBtn = document.createElement('button');
-        skipBtn.id = 'skipMicBtn';
-        skipBtn.className = 'ai-action-btn ai-emergency-btn';
-        skipBtn.innerHTML = '⚠️ Skip Microphone (Text Chat Only)';
-        skipBtn.style.cssText = `
-            background: linear-gradient(135deg, #ff9900 0%, #cc6600 100%) !important;
-            color: white !important;
-            margin-top: 10px;
-            display: block !important;
-        `;
-        
-        // Add to button container
-        const buttonContainer = document.querySelector('.ai-action-buttons');
-        if (buttonContainer) {
-            buttonContainer.appendChild(skipBtn);
-        }
-        
-        // Add click handler
-        skipBtn.addEventListener('click', function() {
-            const url = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&micPermissionGranted=false&textOnly=true`;
-            window.open(url, '_blank');
+        try {
+            // 1. Get microphone permission
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                } 
+            });
+            
+            stream.getTracks().forEach(track => track.stop());
+            console.log('✅ Microphone permission granted');
+            
+            // 2. Generate parameters - USE OLD FORMAT FROM WORKING VERSION
+            const timestamp = Date.now();
+            
+            // CRITICAL FIX: Use the OLD URL format that works
+            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
+            
+            console.log('🔗 Generated URL:', url);
+            
+            // 3. Update button
+            this.innerHTML = '✅ Opening voice chat...';
+            
+            // 4. Hide widget
             document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-        });
-    }
-    
-    // Make it visible
-    skipBtn.style.display = 'block';
-}
+            
+            // 5. Set iframe source and show overlay
+            setTimeout(() => {
+                const iframe = document.getElementById('voiceChatIframe');
+                const overlay = document.getElementById('voiceChatOverlay');
+                
+                console.log('📦 Loading iframe with URL...');
+                
+                // CRITICAL: Set iframe src (don't use base64 encoding)
+                iframe.src = url;
+                overlay.classList.add('active');
+                
+                // Send parameters via postMessage as backup
+                setTimeout(() => {
+                    try {
+                        iframe.contentWindow.postMessage({
+                            type: 'VOICE_CHAT_PARAMS',
+                            params: {
+                                autoStartVoice: 'true',
+                                micPermissionGranted: 'true',
+                                gestureInitiated: 'true',
+                                timestamp: timestamp,
+                                source: 'mobilewise-widget'
+                            }
+                        }, '*');
+                        console.log('📨 Sent params via postMessage');
+                    } catch (e) {
+                        console.log('⚠️ Could not send postMessage:', e.message);
+                    }
+                }, 1000);
+                
+                // Escape key to close
+                document.addEventListener('keydown', function closeOnEscape(e) {
+                    if (e.key === 'Escape') {
+                        closeOverlay();
+                        document.removeEventListener('keydown', closeOnEscape);
+                    }
+                });
+            }, 500);
+            
+            // 6. Reset button
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+            }, 1500);
+            
+        } catch (error) {
+            console.error('❌ Microphone permission denied:', error);
+            
+            // Open without mic
+            this.innerHTML = '⚠️ Opening without mic...';
+            
+            // Use simple URL format
+            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget`;
+            
+            // Show overlay with iframe
+            setTimeout(() => {
+                const iframe = document.getElementById('voiceChatIframe');
+                const overlay = document.getElementById('voiceChatOverlay');
+                
+                iframe.src = url;
+                overlay.classList.add('active');
+            }, 500);
+            
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+            }, 3000);
+        }
+    });
 
-// ======== VIDEO FREEZE FUNCTION ========
+    // VIDEO FREEZE FUNCTION - Add this to your widget JavaScript
 function setupVideoFreeze() {
+    // Wait for widget to load
     setTimeout(() => {
+        // Find the AI video
         const video = document.querySelector('.ai-video, .ai-video-container video, [class*="ai"] video');
         
         if (video) {
             console.log('🎥 Found video:', video);
+            
+            // 1. Disable HTML loop attribute
             video.removeAttribute('loop');
             video.loop = false;
             
+            // 2. Add freeze on end
             video.addEventListener('ended', () => {
                 console.log('❄️ Freezing video...');
                 video.pause();
                 video.classList.add('video-frozen');
             });
             
+            // 3. Optional: Add visual freeze style
             const style = document.createElement('style');
             style.textContent = `
                 .video-frozen {
@@ -673,40 +542,46 @@ function setupVideoFreeze() {
                 }
             `;
             document.head.appendChild(style);
+            
+            console.log('✅ Video freeze configured');
+        } else {
+            console.warn('⚠️ No video found for freezing');
         }
-    }, 3000);
+    }, 3000); // Wait 3 seconds for everything to load
 }
 
-// ======== CLOSE OVERLAY FUNCTION ========
-function closeOverlay() {
-    const overlay = document.getElementById('voiceChatOverlay');
-    const iframe = document.getElementById('voiceChatIframe');
-    
-    overlay.classList.remove('active');
-    
-    setTimeout(() => {
-        iframe.src = '';
-        document.getElementById('mobilewiseAIWidget').classList.add('visible');
-    }, 300);
-}
-
-// ======== EVENT LISTENERS ========
-document.getElementById('closeVoiceChat').addEventListener('click', closeOverlay);
-
-document.getElementById('voiceChatOverlay').addEventListener('click', function(e) {
-    if (e.target.id === 'voiceChatOverlay') {
-        closeOverlay();
-    }
-});
-
-document.getElementById('justBrowsingBtn').addEventListener('click', function() {
-    console.log('👉 Just Browsing clicked');
-    document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-    sessionStorage.setItem('userBrowsing', 'true');
-});
-
-// Run video freeze
+// Run it
 setupVideoFreeze();
-
-console.log('✅ MobileWise AI Widget loaded (FIXED VERSION)');
+    
+    // Close overlay function
+    function closeOverlay() {
+        const overlay = document.getElementById('voiceChatOverlay');
+        const iframe = document.getElementById('voiceChatIframe');
+        
+        overlay.classList.remove('active');
+        
+        setTimeout(() => {
+            iframe.src = '';
+            document.getElementById('mobilewiseAIWidget').classList.add('visible');
+        }, 300);
+    }
+    
+    // ======== CLOSE VOICE CHAT OVERLAY ========
+    document.getElementById('closeVoiceChat').addEventListener('click', closeOverlay);
+    
+    // Close when clicking outside
+    document.getElementById('voiceChatOverlay').addEventListener('click', function(e) {
+        if (e.target.id === 'voiceChatOverlay') {
+            closeOverlay();
+        }
+    });
+    
+    // Just Browsing
+    document.getElementById('justBrowsingBtn').addEventListener('click', function() {
+        console.log('👉 Just Browsing clicked');
+        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+        sessionStorage.setItem('userBrowsing', 'true');
+    });
+    
+    console.log('✅ MobileWise AI Widget loaded (FIXED OVERLAY version)');
 })();
