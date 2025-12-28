@@ -4,6 +4,23 @@
 
 (function() {
     console.log('🚀 MobileWise Widget loading (FIXED OVERLAY VERSION)...');
+   
+    if (!window.micPermissionInProgress) {
+    window.micPermissionInProgress = false;
+}
+
+// ADD THIS to detect overlays from other apps
+function checkForOverlays() {
+    return new Promise((resolve) => {
+        // This is tricky to detect, but we can at least check page state
+        if (document.visibilityState !== 'visible') {
+            console.warn('⚠️ Page not visible - possible overlay?');
+            resolve(false);
+        } else {
+            resolve(true);
+        }
+    });
+}
     
     // CONFIG - POINT TO YOUR VOICE CHAT
     const config = {
@@ -407,17 +424,55 @@
         
     }, 1000);
     
-    // ======== GET AI ASSISTANCE - FIXED OVERLAY ========
-    document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
-        console.log('🎤 Opening AI Voice Assistant as overlay...');
+    // ======== GET AI ASSISTANCE - FIXED OVERLAY (WITH PERMISSION FIX) ========
+document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
+    console.log('🎤 Opening AI Voice Assistant as overlay...');
+    
+    const originalText = this.innerHTML;
+    this.innerHTML = '🎤 Getting microphone...';
+    this.disabled = true;
+    
+    // ADDED: Flag to prevent multiple permission requests
+    if (window.micPermissionInProgress) {
+        console.log('⚠️ Microphone request already in progress');
+        return;
+    }
+    
+    window.micPermissionInProgress = true;
+    
+    try {
+        // 1. ADDED: Check for existing permission FIRST
+        const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+        console.log('🔍 Current mic permission:', permissionStatus.state);
         
-        const originalText = this.innerHTML;
-        this.innerHTML = '🎤 Getting microphone...';
-        this.disabled = true;
+        // 2. ADDED: Check if user has interacted with the page
+        if (!navigator.userActivation.hasBeenActive) {
+            console.warn('⚠️ No user interaction detected - requiring click');
+            alert('Please click the button again to enable microphone.');
+            this.innerHTML = originalText;
+            this.disabled = false;
+            window.micPermissionInProgress = false;
+            return;
+        }
         
-        try {
-            // 1. Get microphone permission
-            const stream = await navigator.mediaDevices.getUserMedia({ 
+        // 3. ADDED: Check if page is visible
+        if (document.visibilityState !== 'visible') {
+            console.warn('⚠️ Tab not visible');
+            alert('Please make sure this tab is active and visible.');
+            this.innerHTML = originalText;
+            this.disabled = false;
+            window.micPermissionInProgress = false;
+            return;
+        }
+        
+        // 4. ADDED: Small delay to prevent race conditions
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // 5. Get microphone permission (only if needed)
+        let stream = null;
+        if (permissionStatus.state === 'prompt' || permissionStatus.state === 'denied') {
+            console.log('🎤 Requesting microphone permission...');
+            stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
@@ -425,92 +480,105 @@
                 } 
             });
             
+            // Stop the stream immediately - we just wanted permission
             stream.getTracks().forEach(track => track.stop());
             console.log('✅ Microphone permission granted');
-            
-            // 2. Generate parameters - USE OLD FORMAT FROM WORKING VERSION
-            const timestamp = Date.now();
-            
-            // CRITICAL FIX: Use the OLD URL format that works
-            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
-            
-            console.log('🔗 Generated URL:', url);
-            
-            // 3. Update button
-            this.innerHTML = '✅ Opening voice chat...';
-            
-            // 4. Hide widget
-            document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-            
-            // 5. Set iframe source and show overlay
-            setTimeout(() => {
-                const iframe = document.getElementById('voiceChatIframe');
-                const overlay = document.getElementById('voiceChatOverlay');
-                
-                console.log('📦 Loading iframe with URL...');
-                
-                // CRITICAL: Set iframe src (don't use base64 encoding)
-                iframe.src = url;
-                overlay.classList.add('active');
-                
-                // Send parameters via postMessage as backup
-                setTimeout(() => {
-                    try {
-                        iframe.contentWindow.postMessage({
-                            type: 'VOICE_CHAT_PARAMS',
-                            params: {
-                                autoStartVoice: 'true',
-                                micPermissionGranted: 'true',
-                                gestureInitiated: 'true',
-                                timestamp: timestamp,
-                                source: 'mobilewise-widget'
-                            }
-                        }, '*');
-                        console.log('📨 Sent params via postMessage');
-                    } catch (e) {
-                        console.log('⚠️ Could not send postMessage:', e.message);
-                    }
-                }, 1000);
-                
-                // Escape key to close
-                document.addEventListener('keydown', function closeOnEscape(e) {
-                    if (e.key === 'Escape') {
-                        closeOverlay();
-                        document.removeEventListener('keydown', closeOnEscape);
-                    }
-                });
-            }, 500);
-            
-            // 6. Reset button
-            setTimeout(() => {
-                this.innerHTML = originalText;
-                this.disabled = false;
-            }, 1500);
-            
-        } catch (error) {
-            console.error('❌ Microphone permission denied:', error);
-            
-            // Open without mic
-            this.innerHTML = '⚠️ Opening without mic...';
-            
-            // Use simple URL format
-            const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget`;
-            
-            // Show overlay with iframe
-            setTimeout(() => {
-                const iframe = document.getElementById('voiceChatIframe');
-                const overlay = document.getElementById('voiceChatOverlay');
-                
-                iframe.src = url;
-                overlay.classList.add('active');
-            }, 500);
-            
-            setTimeout(() => {
-                this.innerHTML = originalText;
-                this.disabled = false;
-            }, 3000);
+        } else {
+            console.log('✅ Microphone permission already:', permissionStatus.state);
         }
-    });
+        
+        // 6. Generate parameters
+        const timestamp = Date.now();
+        const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
+        
+        console.log('🔗 Generated URL:', url);
+        
+        // 7. Update button
+        this.innerHTML = '✅ Opening voice chat...';
+        
+        // 8. Hide widget
+        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+        
+        // 9. ADDED: Wait a bit before showing overlay (helps with Android)
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // 10. Set iframe source and show overlay
+        const iframe = document.getElementById('voiceChatIframe');
+        const overlay = document.getElementById('voiceChatOverlay');
+        
+        console.log('📦 Loading iframe with URL...');
+        
+        iframe.src = url;
+        
+        // ADDED: Another small delay before showing overlay
+        setTimeout(() => {
+            overlay.classList.add('active');
+        }, 100);
+        
+        // Send parameters via postMessage
+        setTimeout(() => {
+            try {
+                iframe.contentWindow.postMessage({
+                    type: 'VOICE_CHAT_PARAMS',
+                    params: {
+                        autoStartVoice: 'true',
+                        micPermissionGranted: 'true',
+                        gestureInitiated: 'true',
+                        timestamp: timestamp,
+                        source: 'mobilewise-widget'
+                    }
+                }, '*');
+                console.log('📨 Sent params via postMessage');
+            } catch (e) {
+                console.log('⚠️ Could not send postMessage:', e.message);
+            }
+        }, 1000);
+        
+        // Reset button
+        setTimeout(() => {
+            this.innerHTML = originalText;
+            this.disabled = false;
+            window.micPermissionInProgress = false;
+        }, 1500);
+        
+    } catch (error) {
+        console.error('❌ Microphone error:', error);
+        
+        // RESET flag
+        window.micPermissionInProgress = false;
+        
+        // Check error type
+        if (error.name === 'NotAllowedError') {
+            console.log('👆 User denied microphone permission');
+            alert('Microphone permission is required for voice chat. Please enable it in your browser settings.');
+        } else if (error.name === 'NotFoundError') {
+            console.log('🎤 No microphone found');
+            alert('No microphone detected. Please connect a microphone and try again.');
+        }
+        
+        // Open without mic as fallback
+        this.innerHTML = '⚠️ Opening without mic...';
+        
+        const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget`;
+        
+        setTimeout(() => {
+            const iframe = document.getElementById('voiceChatIframe');
+            const overlay = document.getElementById('voiceChatOverlay');
+            
+            iframe.src = url;
+            
+            // Small delay for Android
+            setTimeout(() => {
+                overlay.classList.add('active');
+            }, 100);
+        }, 500);
+        
+        setTimeout(() => {
+            this.innerHTML = originalText;
+            this.disabled = false;
+        }, 3000);
+    }
+});
 
     // VIDEO FREEZE FUNCTION - Add this to your widget JavaScript
 function setupVideoFreeze() {
