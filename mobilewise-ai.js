@@ -488,6 +488,53 @@ document.getElementById('getAssistanceBtn').addEventListener('click', async func
     }
 });
 
+// Add this function to detect overlay issues
+function checkForAndroidOverlay() {
+    return new Promise((resolve, reject) => {
+        if (!/Android/i.test(navigator.userAgent)) {
+            resolve(); // Not Android, skip check
+            return;
+        }
+        
+        // Test if we can request permission
+        const testPermission = navigator.permissions.query({ name: 'microphone' });
+        
+        testPermission.then(permissionStatus => {
+            if (permissionStatus.state === 'prompt') {
+                resolve(); // Can ask for permission
+            } else {
+                reject(new Error('Android overlay blocking detected'));
+            }
+        }).catch(() => {
+            reject(new Error('Permission query failed - likely overlay issue'));
+        });
+    });
+}
+
+// Then in your click handler, use it:
+document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
+    console.log('🎤 Starting...');
+    
+    try {
+        // CHECK FOR ANDROID OVERLAY FIRST
+        await checkForAndroidOverlay();
+        
+        // If passes, proceed with permission request
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            audio: true // SIMPLIFIED - no echoCancellation
+        });
+        // ... rest of your code ...
+        
+    } catch (error) {
+        if (error.message.includes('overlay')) {
+            // SHOW OVERLAY WARNING
+            showAndroidOverlayWarning();
+            return;
+        }
+        // ... other error handling ...
+    }
+});
+
     // VIDEO FREEZE FUNCTION - Add this to your widget JavaScript
 function setupVideoFreeze() {
     // Wait for widget to load
