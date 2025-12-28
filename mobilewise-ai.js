@@ -409,19 +409,6 @@
     
     // ======== GET AI ASSISTANCE - FIXED OVERLAY ========
     document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
-        // Add at the TOP of your click handler
-console.log('📱 Device info:', {
-    userAgent: navigator.userAgent,
-    platform: navigator.platform,
-    vendor: navigator.vendor
-});
-
-// Check permission state BEFORE requesting
-navigator.permissions.query({ name: 'microphone' }).then(permission => {
-    console.log('🔍 Current mic permission state:', permission.state);
-}).catch(err => {
-    console.log('❌ Cannot check permission (system block):', err);
-});
         console.log('🎤 Opening AI Voice Assistant as overlay...');
         
         const originalText = this.innerHTML;
