@@ -34,7 +34,14 @@ function checkForOverlays() {
     // ======== INJECT CSS ========
     const style = document.createElement('style');
     style.textContent = `
-        /* MOBILEWISE AI WIDGET - BOTTOM RIGHT POSITION */
+        /* MO// Initialize flags
+if (!window.voiceChatReady) {
+    window.voiceChatReady = false;
+}
+
+// Detect Android
+window.isAndroid = /Android/i.test(navigator.userAgent);
+console.log('📱 Device is Android?', window.isAndroid);BILEWISE AI WIDGET - BOTTOM RIGHT POSITION */
         #mobilewiseAIWidget {
             position: fixed;
             bottom: 5px;
@@ -424,161 +431,190 @@ function checkForOverlays() {
         
     }, 1000);
     
-    // ======== GET AI ASSISTANCE - FIXED OVERLAY (WITH PERMISSION FIX) ========
+    // ======== GET AI ASSISTANCE - TWO-TAP SYSTEM ========
 document.getElementById('getAssistanceBtn').addEventListener('click', async function() {
-    console.log('🎤 Opening AI Voice Assistant as overlay...');
+    console.log('🎤 TWO-TAP: Starting voice chat flow...');
     
     const originalText = this.innerHTML;
-    this.innerHTML = '🎤 Getting microphone...';
-    this.disabled = true;
     
-    // ADDED: Flag to prevent multiple permission requests
-    if (window.micPermissionInProgress) {
-        console.log('⚠️ Microphone request already in progress');
+    // TWO-TAP SYSTEM: First tap just prepares, second tap requests permission
+    if (!window.voiceChatReady) {
+        // FIRST TAP: Just prepare without permission request
+        console.log('👆 FIRST TAP: Preparing voice chat...');
+        this.innerHTML = 'Tap again to start voice chat 👆';
+        this.classList.add('ai-ready-btn');
+        
+        // Set flag for second tap
+        window.voiceChatReady = true;
+        
+        // Auto-reset after 10 seconds
+        setTimeout(() => {
+            if (window.voiceChatReady) {
+                window.voiceChatReady = false;
+                this.innerHTML = originalText;
+                this.classList.remove('ai-ready-btn');
+                console.log('🔄 Reset voice chat button');
+            }
+        }, 10000);
+        
         return;
     }
     
-    window.micPermissionInProgress = true;
+    // SECOND TAP: Now request permission
+    console.log('👆👆 SECOND TAP: Requesting microphone...');
+    window.voiceChatReady = false;
+    this.innerHTML = '🎤 Getting microphone...';
+    this.disabled = true;
+    this.classList.remove('ai-ready-btn');
     
     try {
-        // 1. ADDED: Check for existing permission FIRST
-        const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
-        console.log('🔍 Current mic permission:', permissionStatus.state);
-        
-        // 2. ADDED: Check if user has interacted with the page
-        if (!navigator.userActivation.hasBeenActive) {
-            console.warn('⚠️ No user interaction detected - requiring click');
-            alert('Please click the button again to enable microphone.');
-            this.innerHTML = originalText;
-            this.disabled = false;
-            window.micPermissionInProgress = false;
-            return;
-        }
-        
-        // 3. ADDED: Check if page is visible
-        if (document.visibilityState !== 'visible') {
-            console.warn('⚠️ Tab not visible');
-            alert('Please make sure this tab is active and visible.');
-            this.innerHTML = originalText;
-            this.disabled = false;
-            window.micPermissionInProgress = false;
-            return;
-        }
-        
-        // 4. ADDED: Small delay to prevent race conditions
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        // 5. Get microphone permission (only if needed)
-        let stream = null;
-        if (permissionStatus.state === 'prompt' || permissionStatus.state === 'denied') {
-            console.log('🎤 Requesting microphone permission...');
-            stream = await navigator.mediaDevices.getUserMedia({ 
-                audio: {
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: true
-                } 
-            });
-            
-            // Stop the stream immediately - we just wanted permission
-            stream.getTracks().forEach(track => track.stop());
-            console.log('✅ Microphone permission granted');
-        } else {
-            console.log('✅ Microphone permission already:', permissionStatus.state);
-        }
-        
-        // 6. Generate parameters
-        const timestamp = Date.now();
-        const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=true&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
-        
-        console.log('🔗 Generated URL:', url);
-        
-        // 7. Update button
-        this.innerHTML = '✅ Opening voice chat...';
-        
-        // 8. Hide widget
-        document.getElementById('mobilewiseAIWidget').classList.remove('visible');
-        
-        // 9. ADDED: Wait a bit before showing overlay (helps with Android)
+        // 1. ADD CRITICAL DELAY for Android
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // 10. Set iframe source and show overlay
-        const iframe = document.getElementById('voiceChatIframe');
-        const overlay = document.getElementById('voiceChatOverlay');
+        // 2. Use SIMPLIFIED permission request (no advanced audio settings)
+        console.log('🔍 Requesting simple audio permission...');
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            audio: true  // SIMPLIFIED - no echoCancellation etc.
+        });
         
-        console.log('📦 Loading iframe with URL...');
+        stream.getTracks().forEach(track => track.stop());
+        console.log('✅ Microphone permission granted');
         
-        iframe.src = url;
-        
-        // ADDED: Another small delay before showing overlay
-        setTimeout(() => {
-            overlay.classList.add('active');
-        }, 100);
-        
-        // Send parameters via postMessage
-        setTimeout(() => {
-            try {
-                iframe.contentWindow.postMessage({
-                    type: 'VOICE_CHAT_PARAMS',
-                    params: {
-                        autoStartVoice: 'true',
-                        micPermissionGranted: 'true',
-                        gestureInitiated: 'true',
-                        timestamp: timestamp,
-                        source: 'mobilewise-widget'
-                    }
-                }, '*');
-                console.log('📨 Sent params via postMessage');
-            } catch (e) {
-                console.log('⚠️ Could not send postMessage:', e.message);
-            }
-        }, 1000);
+        // 3. PROCEED WITH VOICE CHAT
+        proceedToVoiceChat();
         
         // Reset button
         setTimeout(() => {
             this.innerHTML = originalText;
             this.disabled = false;
-            window.micPermissionInProgress = false;
-        }, 1500);
+        }, 1000);
         
     } catch (error) {
         console.error('❌ Microphone error:', error);
         
-        // RESET flag
-        window.micPermissionInProgress = false;
-        
-        // Check error type
-        if (error.name === 'NotAllowedError') {
-            console.log('👆 User denied microphone permission');
-            alert('Microphone permission is required for voice chat. Please enable it in your browser settings.');
-        } else if (error.name === 'NotFoundError') {
-            console.log('🎤 No microphone found');
-            alert('No microphone detected. Please connect a microphone and try again.');
-        }
-        
-        // Open without mic as fallback
-        this.innerHTML = '⚠️ Opening without mic...';
-        
-        const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=false&gestureInitiated=true&source=mobilewise-widget`;
-        
-        setTimeout(() => {
-            const iframe = document.getElementById('voiceChatIframe');
-            const overlay = document.getElementById('voiceChatOverlay');
+        // SPECIAL HANDLING FOR ANDROID OVERLAY ISSUE
+        if (error.name === 'NotAllowedError' && 
+            error.message.includes('overlay') || 
+            navigator.userAgent.includes('Android')) {
             
-            iframe.src = url;
+            console.log('📱 Android overlay detected - showing instructions');
             
-            // Small delay for Android
-            setTimeout(() => {
-                overlay.classList.add('active');
-            }, 100);
-        }, 500);
-        
-        setTimeout(() => {
-            this.innerHTML = originalText;
+            // Show overlay warning
+            showAndroidOverlayWarning();
+            
+            // Reset button with special message
+            this.innerHTML = '⚠️ Tap after closing overlays';
             this.disabled = false;
-        }, 3000);
+            
+            // Auto-reset
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                window.voiceChatReady = false;
+            }, 5000);
+            
+        } else {
+            // Other errors - open without mic
+            console.log('⚠️ Opening without microphone');
+            proceedToVoiceChat(false);
+            
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+            }, 1000);
+        }
     }
 });
+
+// ======== PROCEED TO VOICE CHAT ========
+function proceedToVoiceChat(hasMic = true) {
+    const timestamp = Date.now();
+    const url = `${config.voiceChatUrl}?autoStartVoice=true&micPermissionGranted=${hasMic}&gestureInitiated=true&timestamp=${timestamp}&source=mobilewise-widget`;
+    
+    console.log('🔗 Opening voice chat:', url);
+    
+    // Hide widget
+    document.getElementById('mobilewiseAIWidget').classList.remove('visible');
+    
+    // ADD DELAY for Android
+    setTimeout(() => {
+        const iframe = document.getElementById('voiceChatIframe');
+        const overlay = document.getElementById('voiceChatOverlay');
+        
+        iframe.src = url;
+        
+        // Another small delay before showing overlay
+        setTimeout(() => {
+            overlay.classList.add('active');
+        }, 100);
+    }, 500);
+}
+
+// ======== ANDROID OVERLAY WARNING ========
+function showAndroidOverlayWarning() {
+    const warningHTML = `
+        <div id="androidOverlayWarning" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.9);
+            z-index: 30000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        ">
+            <div style="
+                background: white;
+                padding: 25px;
+                border-radius: 15px;
+                max-width: 400px;
+                text-align: center;
+            ">
+                <h3 style="color: #ff0000; margin-bottom: 15px;">⚠️ Android Permission Issue</h3>
+                <p style="margin-bottom: 15px;">
+                    <strong>To fix this:</strong>
+                </p>
+                <ol style="text-align: left; margin-bottom: 20px; padding-left: 20px;">
+                    <li>Close <strong>all other apps</strong> (especially messaging apps)</li>
+                    <li>Go to <strong>Settings → Apps → Special app access → Display over other apps</strong></li>
+                    <li>Disable overlays for apps like Facebook Messenger, WhatsApp, etc.</li>
+                    <li>Return here and tap the button again</li>
+                </ol>
+                <button onclick="document.getElementById('androidOverlayWarning').remove()" 
+                        style="
+                            background: #002fff;
+                            color: white;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 8px;
+                            font-weight: bold;
+                            cursor: pointer;
+                        ">
+                    I've closed overlays
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', warningHTML);
+}
+
+// ======== ADD THIS STYLE FOR TWO-TAP BUTTON ========
+const twoTapStyle = document.createElement('style');
+twoTapStyle.textContent = `
+    .ai-ready-btn {
+        background: linear-gradient(135deg, #00ff00 0%, #00a000 100%) !important;
+        animation: pulseReady 1s infinite !important;
+    }
+    
+    @keyframes pulseReady {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+`;
+document.head.appendChild(twoTapStyle);
 
     // VIDEO FREEZE FUNCTION - Add this to your widget JavaScript
 function setupVideoFreeze() {
