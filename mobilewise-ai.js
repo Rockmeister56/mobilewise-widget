@@ -195,8 +195,8 @@
         
        /* FIXED: PROPER IFRAME CONTAINER */
 #voiceChatContainer {
-    max-width: 825px;
-    width: 90%;
+    max-width: 830px;
+    width: 100%;
     height: 80vh;
     min-height: 500px;
     background: white;
