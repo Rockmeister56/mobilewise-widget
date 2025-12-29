@@ -330,6 +330,41 @@
         font-size: 20px;
     }
 }
+
+/* ===== MOBILE VOICE CHAT FIX (768px and below) ===== */
+@media (max-width: 768px) {
+    /* FIX: Make the voice chat container 420px wide */
+    #voiceChatContainer {
+        width: 100% !important;
+        max-width: 420px !important;  /* ← ADD THIS LINE */
+        margin: 0 auto !important;    /* ← ADD THIS LINE */
+        height: 100vh !important;
+        border-radius: 0 !important;
+    }
+    
+    /* FIX: Make the iframe match */
+    #voiceChatIframe {
+        width: 100% !important;
+        max-width: 420px !important;  /* ← ADD THIS LINE */
+        height: 100% !important;
+        border: none !important;
+        margin: 0 auto !important;    /* ← ADD THIS LINE */
+        display: block !important;
+    }
+    
+    /* FIX: Center everything */
+    #voiceChatOverlay {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        padding-top: 10px !important;
+    }
+    
+    /* LEAVE THE VIDEO BUTTON STYLES ALONE - they're fine */
+    #mobilewiseAIWidget {
+        /* Don't change - this is the video button widget */
+    }
+}
     `;
     document.head.appendChild(style);
     
