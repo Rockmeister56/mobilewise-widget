@@ -196,7 +196,6 @@
        /* FIXED: PROPER IFRAME CONTAINER */
 #voiceChatContainer {
     width: 90%;
-    max-width: 810px; /* ← CHANGE to match your desktop container */
     height: 80vh;
     min-height: 500px;
     background: white;
