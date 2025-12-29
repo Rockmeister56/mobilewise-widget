@@ -193,20 +193,20 @@
             visibility: visible;
         }
         
-        /* FIXED: PROPER IFRAME CONTAINER */
-        #voiceChatContainer {
-            width: 90%;
-            max-width: 1000px;
-            height: 80vh;
-            min-height: 500px;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
+       /* FIXED: PROPER IFRAME CONTAINER */
+#voiceChatContainer {
+    width: 90%;
+    max-width: 810px; /* ← CHANGE to match your desktop container */
+    height: 80vh;
+    min-height: 500px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
         
         #voiceChatIframe {
             width: 100%;
