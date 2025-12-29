@@ -317,7 +317,6 @@
     #voiceChatContainer {
         width: 100%;
         height: 100vh;
-        max-width: none;
         border-radius: 0;
     }
 
