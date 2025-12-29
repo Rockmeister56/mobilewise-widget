@@ -329,35 +329,33 @@
     }
 }
 
-/* ===== NUCLEAR IFRAME FIX ===== */
+/* ===== FIXED MOBILE IFRAME CONTAINER ===== */
 @media (max-width: 768px) {
   #voiceChatContainer {
-    width: 400px !important;
-    max-width: 400px !important;
-    margin: 0 auto !important;
-    overflow: hidden !important;
-    border: 5px solid lime !important; /* Debug */
-  }
-  
-  #voiceChatIframe {
-    width: 400px !important;
-    max-width: 400px !important;
+    width: 100% !important;           /* Changed from 400px */
+    max-width: 100% !important;       /* Changed from 400px */
     height: 100vh !important;
-    margin: 0 auto !important;
-    display: block !important;
-    border: 5px solid magenta !important; /* Debug */
-    transform: scale(1) !important;
-    transform-origin: top center !important;
-    zoom: 1 !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: 5px solid lime !important; /* Keep for debug */
   }
-  
-  /* Force the overlay to center everything */
+
+  #voiceChatIframe {
+    width: 100% !important;           /* Changed from 400px */
+    max-width: 100% !important;       /* Changed from 400px */
+    height: 100% !important;
+    display: block !important;
+    border: none !important;          /* Remove magenta debug border */
+  }
+
+  /* Center the container properly */
   #voiceChatOverlay {
     display: flex !important;
     justify-content: center !important;
-    align-items: flex-start !important;
-    padding-top: 10px !important;
-    background: rgba(0,0,0,0.9) !important;
+    align-items: center !important;
+    padding: 0 !important;
+    background: rgba(0,0,0,0.95) !important;
   }
 }
     `;
