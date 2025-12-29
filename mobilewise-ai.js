@@ -358,23 +358,6 @@
         align-items: flex-start !important;
         padding-top: 10px !important;
     }
-
-    /* === NUCLEAR MOBILE WIDTH FIX === */
-@media (max-width: 768px) {
-  #voiceChatContainer {
-    max-width: 420px !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    border: 3px solid #00ff00 !important; /* Green debug border */
-  }
-  
-  #voiceChatIframe {
-    max-width: 420px !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    border: 3px solid #0000ff !important; /* Blue debug border */
-  }
-}
     
     /* LEAVE THE VIDEO BUTTON STYLES ALONE - they're fine */
     #mobilewiseAIWidget {
