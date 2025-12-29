@@ -409,6 +409,44 @@
     
     document.body.insertAdjacentHTML('beforeend', widgetHTML);
 
+    // Add this to your widget initialization code
+function fixIframeMobileWidth() {
+    const iframe = document.getElementById('voiceChatIframe');
+    if (!iframe) return;
+    
+    iframe.onload = function() {
+        try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            const style = iframeDoc.createElement('style');
+            style.textContent = `
+                /* FORCE MOBILE WIDTH INSIDE IFRAME */
+                @media (max-width: 768px) {
+                    body, html {
+                        max-width: 420px !important;
+                        width: 100% !important;
+                        margin: 0 auto !important;
+                        overflow-x: hidden !important;
+                    }
+                    
+                    .container {
+                        max-width: 420px !important;
+                        width: 100% !important;
+                        margin: 0 auto !important;
+                        padding: 0 15px !important;
+                        box-sizing: border-box !important;
+                    }
+                }
+            `;
+            iframeDoc.head.appendChild(style);
+        } catch(e) {
+            console.log('Iframe styling attempt:', e);
+        }
+    };
+}
+
+// Call it when widget loads
+fixIframeMobileWidth();
+
         // Animated typing text
         function typeText(element, text, speed = 50) {
             element.innerHTML = '';
