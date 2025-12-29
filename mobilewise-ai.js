@@ -338,7 +338,7 @@
     min-height: 100vh !important;
     margin: 0 !important;
     border-radius: 0 !important;
-    border: 5px solid lime !important; /* Keep for debug */
+    border: none
   }
 
   #voiceChatIframe {
