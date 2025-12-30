@@ -560,9 +560,6 @@ function setupVideoFreeze() {
 setupVideoFreeze();
     
     
-    // ======== CLOSE VOICE CHAT OVERLAY ========
-    document.getElementById('closeVoiceChat').addEventListener('click', closeOverlay);
-    
     // Close when clicking outside
     document.getElementById('voiceChatOverlay').addEventListener('click', function(e) {
         if (e.target.id === 'voiceChatOverlay') {
