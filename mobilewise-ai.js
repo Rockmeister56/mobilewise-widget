@@ -572,20 +572,14 @@ setupVideoFreeze();
         }, 300);
     }
 
- // Message listener for iframe communication
+// Message listener for iframe communication
 window.addEventListener('message', function(event) {
-    console.log("Message received:", {
-        data: event.data,
-        origin: event.origin,
-        source: event.source
-    });
+    console.log("🔔 Widget received message:", event.data, "from origin:", event.origin);
     
-    // Only accept messages from your voice chat domain
-    if (event.origin === 'https://mobilewise.netlify.app') {
-        if (event.data === 'CLOSE_CHAT') {
-            console.log("✅ Closing voice chat overlay via message");
-            closeOverlay(); // Call your existing close function
-        }
+    // ACCEPT FROM ANY ORIGIN FOR TESTING
+    if (event.data === 'CLOSE_CHAT') {
+        console.log("✅ Closing voice chat overlay via message");
+        closeOverlay(); // Call your existing close function
     }
 });
     
