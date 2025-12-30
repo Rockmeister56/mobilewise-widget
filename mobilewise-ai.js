@@ -571,6 +571,15 @@ setupVideoFreeze();
             document.getElementById('mobilewiseAIWidget').classList.add('visible');
         }, 300);
     }
+
+    window.closeOverlay = closeOverlay;
+
+    window.addEventListener('message', function(event) {
+    if (event.data === 'CLOSE_CHAT') {
+        console.log("Received close message from iframe");
+        closeOverlay();
+    }
+});
     
     // ======== CLOSE VOICE CHAT OVERLAY ========
     document.getElementById('closeVoiceChat').addEventListener('click', closeOverlay);
