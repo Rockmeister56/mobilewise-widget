@@ -215,29 +215,6 @@
             flex: 1;
         }
         
-        .close-voice-chat {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 0, 0, 1);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-        }
-        
-        .close-voice-chat:hover {
-            background: rgba(255, 255, 255, 1);
-        }
-        
  /* ===== MOBILE ADJUSTMENTS (768px and below) ===== */
 @media (max-width: 768px) {
     #mobilewiseAIWidget {
@@ -392,7 +369,7 @@
     <!-- FIXED VOICE CHAT OVERLAY -->
     <div id="voiceChatOverlay">
         <div id="voiceChatContainer">
-            <button class="close-voice-chat" id="closeVoiceChat">×</button>
+            <button class="close-voice-chat" id="closeVoiceChat"></button>
             <iframe id="voiceChatIframe" 
                     allow="microphone; camera; autoplay"
                     sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
