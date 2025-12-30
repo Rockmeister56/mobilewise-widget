@@ -572,8 +572,6 @@ setupVideoFreeze();
         }, 300);
     }
 
-    window.closeOverlay = closeOverlay;
-
  // Message listener for iframe communication
 window.addEventListener('message', function(event) {
     console.log("Message received:", {
