@@ -559,6 +559,40 @@ function setupVideoFreeze() {
 // Run it
 setupVideoFreeze();
     
+    // Close overlay function
+    function closeOverlay() {
+        const overlay = document.getElementById('voiceChatOverlay');
+        const iframe = document.getElementById('voiceChatIframe');
+        
+        overlay.classList.remove('active');
+        
+        setTimeout(() => {
+            iframe.src = '';
+            document.getElementById('mobilewiseAIWidget').classList.add('visible');
+        }, 300);
+    }
+
+    window.closeOverlay = closeOverlay;
+
+ // Message listener for iframe communication
+window.addEventListener('message', function(event) {
+    console.log("Message received:", {
+        data: event.data,
+        origin: event.origin,
+        source: event.source
+    });
+    
+    // Only accept messages from your voice chat domain
+    if (event.origin === 'https://mobilewise.netlify.app') {
+        if (event.data === 'CLOSE_CHAT') {
+            console.log("✅ Closing voice chat overlay via message");
+            closeOverlay(); // Call your existing close function
+        }
+    }
+});
+    
+    // ======== CLOSE VOICE CHAT OVERLAY ========
+    document.getElementById('closeVoiceChat').addEventListener('click', closeOverlay);
     
     // Close when clicking outside
     document.getElementById('voiceChatOverlay').addEventListener('click', function(e) {
