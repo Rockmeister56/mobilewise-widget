@@ -574,9 +574,11 @@ setupVideoFreeze();
 
     window.closeOverlay = closeOverlay;
 
-    window.addEventListener('message', function(event) {
+   window.addEventListener('message', function(event) {
+    console.log("Message received:", event.data, "from origin:", event.origin);
+    
     if (event.data === 'CLOSE_CHAT') {
-        console.log("Received close message from iframe");
+        console.log("Received CLOSE_CHAT message");
         closeOverlay();
     }
 });
