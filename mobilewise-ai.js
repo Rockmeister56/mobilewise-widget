@@ -559,29 +559,6 @@ function setupVideoFreeze() {
 // Run it
 setupVideoFreeze();
     
-    // Close overlay function
-    function closeOverlay() {
-        const overlay = document.getElementById('voiceChatOverlay');
-        const iframe = document.getElementById('voiceChatIframe');
-        
-        overlay.classList.remove('active');
-        
-        setTimeout(() => {
-            iframe.src = '';
-            document.getElementById('mobilewiseAIWidget').classList.add('visible');
-        }, 300);
-    }
-
-    window.closeOverlay = closeOverlay;
-
-   window.addEventListener('message', function(event) {
-    console.log("Message received:", event.data, "from origin:", event.origin);
-    
-    if (event.data === 'CLOSE_CHAT') {
-        console.log("Received CLOSE_CHAT message");
-        closeOverlay();
-    }
-});
     
     // ======== CLOSE VOICE CHAT OVERLAY ========
     document.getElementById('closeVoiceChat').addEventListener('click', closeOverlay);
